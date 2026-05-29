@@ -24,13 +24,15 @@
     --blue-bg: #eff5fd;
     --green: #2d6a2d;
     --green-bg: #f0f7f0;
+    --purple: #6b3a9e;
+    --purple-bg: #f5f0fd;
     --radius: 8px;
     --radius-sm: 5px;
   }
   [data-theme="dark"] {
     --bg: #0f0f0f;
     --surface: #1a1a1a;
-    --surface2: #222222;
+    --surface2: #222;
     --border: #2e2e2e;
     --border2: #3a3a3a;
     --text: #f0f0f0;
@@ -46,110 +48,141 @@
     --blue-bg: #0d1a2e;
     --green: #4ade80;
     --green-bg: #0a1f0f;
+    --purple: #b08aff;
+    --purple-bg: #1a1030;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; min-height: 100vh; transition: background .2s, color .2s; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:13px;min-height:100vh;}
 
-  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 50px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .topbar-logo { font-size: 14px; font-weight: 700; letter-spacing: .04em; color: var(--accent); }
-  .topbar-logo span { color: var(--text3); font-weight: 400; }
-  .topbar-right { display: flex; align-items: center; gap: 8px; }
-  .date-badge { font-size: 11px; color: var(--text3); margin-right: 4px; }
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .topbar-logo{font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--accent);}
+  .topbar-logo span{color:var(--text3);font-weight:400;}
+  .topbar-right{display:flex;align-items:center;gap:8px;}
+  .date-badge{font-size:11px;color:var(--text3);margin-right:4px;}
+  .btn{font-family:inherit;font-size:11px;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;}
+  .btn-primary:hover{opacity:.88;color:#fff;}
+  .btn-icon{padding:6px 9px;font-size:14px;}
 
-  .btn { font-family: inherit; font-size: 11px; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg); color: var(--text2); cursor: pointer; transition: all .15s; white-space: nowrap; }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
-  .btn-primary:hover { opacity: .88; color: #fff; }
-  .btn-icon { padding: 6px 8px; font-size: 14px; }
+  .layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 50px);}
 
-  .layout { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 50px); }
+  .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 0;position:sticky;top:50px;height:calc(100vh - 50px);overflow-y:auto;}
+  .sidebar-section{padding:0 12px;margin-bottom:20px;}
+  .sidebar-label{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;padding:0 6px;}
+  .nav-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:var(--radius-sm);cursor:pointer;color:var(--text2);font-size:12px;transition:all .1s;}
+  .nav-item:hover{background:var(--surface2);color:var(--text);}
+  .nav-item.active{background:var(--accent-light);color:var(--accent);font-weight:600;}
+  .nav-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;}
+  .nav-count{font-size:10px;padding:1px 5px;border-radius:8px;background:var(--surface2);color:var(--text3);flex-shrink:0;}
+  .nav-count.red{background:var(--red-bg);color:var(--red);}
+  .nav-count.amber{background:var(--amber-bg);color:var(--amber);}
+  .nav-count.blue{background:var(--blue-bg);color:var(--blue);}
 
-  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 16px 0; position: sticky; top: 50px; height: calc(100vh - 50px); overflow-y: auto; }
-  .sidebar-section { padding: 0 12px; margin-bottom: 20px; }
-  .sidebar-label { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; padding: 0 6px; }
-  .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text2); font-size: 12px; transition: all .1s; }
-  .nav-item:hover { background: var(--surface2); color: var(--text); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
-  .nav-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px; }
-  .nav-count { font-size: 10px; padding: 1px 5px; border-radius: 8px; background: var(--surface2); color: var(--text3); flex-shrink: 0; }
-  .nav-count.red { background: var(--red-bg); color: var(--red); }
-  .nav-count.amber { background: var(--amber-bg); color: var(--amber); }
-  .nav-count.blue { background: var(--blue-bg); color: var(--blue); }
+  .main{padding:20px;overflow-y:auto;}
 
-  .main { padding: 20px; overflow-y: auto; }
+  /* VIEW TABS */
+  .view-tabs{display:flex;gap:2px;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;width:fit-content;}
+  .view-tab{font-family:inherit;font-size:11px;padding:5px 14px;border-radius:4px;border:none;background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.03em;transition:all .12s;}
+  .view-tab.active{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08);}
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-  .stat-label { font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
-  .stat-num { font-size: 26px; font-weight: 700; }
-  .stat-num.red { color: var(--red); }
-  .stat-num.amber { color: var(--amber); }
-  .stat-num.blue { color: var(--blue); }
-  .stat-num.green { color: var(--green); }
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
+  .stat-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+  .stat-num{font-size:24px;font-weight:700;}
+  .stat-num.red{color:var(--red);}
+  .stat-num.amber{color:var(--amber);}
+  .stat-num.blue{color:var(--blue);}
+  .stat-num.purple{color:var(--purple);}
+  .stat-num.green{color:var(--green);}
 
-  .group-header { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); padding: 14px 0 5px; border-top: 1px solid var(--border); margin-top: 2px; display: flex; justify-content: space-between; }
-  .group-header:first-child { border-top: none; padding-top: 2px; margin-top: 0; }
+  /* GROUP HEADERS */
+  .group-header{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding:14px 0 5px;border-top:1px solid var(--border);margin-top:2px;display:flex;justify-content:space-between;align-items:center;}
+  .group-header:first-child{border-top:none;padding-top:2px;margin-top:0;}
+  .group-header.red{color:var(--red);}
+  .group-header.amber{color:var(--amber);}
+  .group-header.blue{color:var(--blue);}
+  .group-header.purple{color:var(--purple);}
+  .group-header.green{color:var(--green);}
 
-  .task-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
+  /* TASK LIST */
+  .task-list{display:flex;flex-direction:column;gap:2px;margin-bottom:4px;}
 
-  .task-row { display: grid; grid-template-columns: 20px 88px 1fr 80px 90px 72px; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: var(--radius-sm); cursor: grab; transition: border-color .1s, opacity .1s; }
-  .task-row:hover { border-color: var(--border2); }
-  .task-row.done { opacity: .45; }
-  .task-row.done .task-name { text-decoration: line-through; color: var(--text3); }
-  .task-row.status-ov { border-left-color: var(--red); }
-  .task-row.status-today { border-left-color: var(--amber); }
-  .task-row.status-soon { border-left-color: var(--blue); }
-  .task-row.dragging { opacity: .4; }
-  .task-row.drag-over { border-color: var(--accent); }
+  .task-row{display:grid;grid-template-columns:20px 70px 90px 1fr 80px 64px;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;border-radius:var(--radius-sm);cursor:grab;transition:border-color .1s,opacity .1s;}
+  .task-row:hover{border-color:var(--border2);}
+  .task-row.done{opacity:.4;}
+  .task-row.done .task-name{text-decoration:line-through;color:var(--text3);}
+  .task-row.status-ov{border-left-color:var(--red);}
+  .task-row.status-today{border-left-color:var(--amber);}
+  .task-row.status-tomorrow{border-left-color:var(--purple);}
+  .task-row.status-week{border-left-color:var(--blue);}
+  .task-row.status-next{border-left-color:var(--border2);}
+  .task-row.dragging{opacity:.4;}
+  .task-row.drag-over{border-color:var(--accent);}
 
-  .task-check { width: 15px; height: 15px; border-radius: 3px; border: 1.5px solid var(--border2); background: transparent; cursor: pointer; appearance: none; -webkit-appearance: none; flex-shrink: 0; transition: all .12s; position: relative; }
-  .task-check:checked { background: var(--accent); border-color: var(--accent); }
-  .task-check:checked::after { content: '✓'; color: #fff; font-size: 9px; font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-52%); }
+  .task-check{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;transition:all .12s;position:relative;}
+  .task-check:checked{background:var(--accent);border-color:var(--accent);}
+  .task-check:checked::after{content:'✓';color:#fff;font-size:9px;font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);}
 
-  .task-date { font-size: 11px; color: var(--text2); line-height: 1.4; }
-  .task-date .rng { font-size: 10px; color: var(--text3); display: block; }
-  .task-name { font-size: 12px; color: var(--text); font-weight: 500; }
-  .task-campaign { font-size: 10px; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-date{font-size:11px;color:var(--text2);line-height:1.4;white-space:nowrap;}
+  .task-date .rng{font-size:10px;color:var(--text3);display:block;}
+  .type-badge{font-size:10px;padding:2px 7px;border-radius:3px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);text-align:center;white-space:nowrap;}
+  .task-name{font-size:12px;color:var(--text);font-weight:500;}
+  .task-campaign{font-size:10px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .status-badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600;text-align:center;white-space:nowrap;}
+  .status-badge.ov{background:var(--red-bg);color:var(--red);}
+  .status-badge.today{background:var(--amber-bg);color:var(--amber);}
+  .status-badge.tomorrow{background:var(--purple-bg);color:var(--purple);}
+  .status-badge.week{background:var(--blue-bg);color:var(--blue);}
+  .status-badge.next{background:var(--surface2);color:var(--text3);}
+  .status-badge.done{background:var(--green-bg);color:var(--green);}
 
-  .type-badge { font-size: 10px; padding: 2px 7px; border-radius: 3px; background: var(--surface2); color: var(--text2); border: 1px solid var(--border); text-align: center; white-space: nowrap; }
-  .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 3px; font-weight: 600; text-align: center; white-space: nowrap; }
-  .status-badge.ov { background: var(--red-bg); color: var(--red); }
-  .status-badge.today { background: var(--amber-bg); color: var(--amber); }
-  .status-badge.soon { background: var(--blue-bg); color: var(--blue); }
-  .status-badge.upcoming { background: var(--surface2); color: var(--text3); }
-  .status-badge.done { background: var(--green-bg); color: var(--green); }
-  .source-badge { font-size: 10px; color: var(--text3); text-align: right; white-space: nowrap; }
+  /* JOBS VIEW */
+  .job-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+  .job-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;transition:background .1s;}
+  .job-header:hover{background:var(--surface2);}
+  .job-title{font-size:13px;font-weight:600;color:var(--text);}
+  .job-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+  .job-badges{display:flex;gap:6px;align-items:center;}
+  .job-badge{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:500;}
+  .job-badge.red{background:var(--red-bg);color:var(--red);}
+  .job-badge.amber{background:var(--amber-bg);color:var(--amber);}
+  .job-badge.blue{background:var(--blue-bg);color:var(--blue);}
+  .job-badge.green{background:var(--green-bg);color:var(--green);}
+  .job-badge.gray{background:var(--surface2);color:var(--text3);}
+  .job-chevron{font-size:11px;color:var(--text3);transition:transform .2s;}
+  .job-chevron.open{transform:rotate(90deg);}
+  .job-tasks{display:none;border-top:1px solid var(--border);padding:8px;}
+  .job-tasks.open{display:block;}
 
-  .empty { padding: 40px; text-align: center; color: var(--text3); font-size: 13px; }
+  .job-task-row{display:grid;grid-template-columns:20px 70px 90px 1fr 80px;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-sm);transition:background .1s;}
+  .job-task-row:hover{background:var(--surface2);}
+  .job-task-row.done{opacity:.4;}
+  .job-task-row.done .task-name{text-decoration:line-through;}
 
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 200; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius); padding: 22px; width: 460px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
-  .modal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-  .modal-sub { font-size: 11px; color: var(--text3); margin-bottom: 18px; }
-  .form-group { margin-bottom: 12px; }
-  .form-label { font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; display: block; }
-  .form-input, .form-select, .form-textarea { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 12px; padding: 7px 9px; outline: none; transition: border-color .12s; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
-  .form-textarea { resize: vertical; min-height: 65px; }
-  .form-select option { background: var(--surface); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-  .notice { background: var(--accent-light); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 11px; color: var(--text2); margin-bottom: 16px; }
+  .empty{padding:40px;text-align:center;color:var(--text3);font-size:13px;}
 
-  .upload-area { border: 1.5px dashed var(--border2); border-radius: var(--radius); padding: 28px; text-align: center; cursor: pointer; transition: all .15s; color: var(--text3); font-size: 12px; }
-  .upload-area:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  /* MODALS */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:22px;width:460px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.12);}
+  .modal-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
+  .modal-sub{font-size:11px;color:var(--text3);margin-bottom:18px;}
+  .form-group{margin-bottom:12px;}
+  .form-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;display:block;}
+  .form-input,.form-select,.form-textarea{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:inherit;font-size:12px;padding:7px 9px;outline:none;transition:border-color .12s;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);}
+  .form-textarea{resize:vertical;min-height:65px;}
+  .form-select option{background:var(--surface);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+  .notice{background:var(--accent-light);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:9px 12px;font-size:11px;color:var(--text2);margin-bottom:16px;}
+  .upload-area{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all .15s;color:var(--text3);font-size:12px;}
+  .upload-area:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
 
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-  @media (max-width: 768px) {
-    .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .stats { grid-template-columns: repeat(2,1fr); }
-    .task-row { grid-template-columns: 20px 1fr 80px; }
-    .task-date, .type-badge, .source-badge { display: none; }
-  }
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 </style>
 </head>
 <body>
@@ -160,7 +193,7 @@
     <span class="date-badge" id="live-date"></span>
     <button class="btn" onclick="openModal('upload-modal')">↑ Upload CSV</button>
     <button class="btn btn-primary" onclick="openModal('add-modal')">+ Add Task</button>
-    <button class="btn btn-icon" onclick="toggleTheme()" title="Toggle light/dark">☀︎</button>
+    <button class="btn btn-icon" onclick="toggleTheme()" title="Toggle theme" id="theme-btn">☀︎</button>
   </div>
 </div>
 
@@ -168,12 +201,12 @@
   <div class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Views</div>
-      <div class="nav-item active" onclick="setView('all',this)"><span class="nav-label">All tasks</span><span class="nav-count" id="count-all">0</span></div>
-      <div class="nav-item" onclick="setView('ov',this)"><span class="nav-label">Overdue</span><span class="nav-count red" id="count-ov">0</span></div>
-      <div class="nav-item" onclick="setView('today',this)"><span class="nav-label">Today</span><span class="nav-count amber" id="count-today">0</span></div>
-      <div class="nav-item" onclick="setView('soon',this)"><span class="nav-label">Next 7 days</span><span class="nav-count blue" id="count-soon">0</span></div>
-      <div class="nav-item" onclick="setView('upcoming',this)"><span class="nav-label">Upcoming</span><span class="nav-count" id="count-upcoming">0</span></div>
-      <div class="nav-item" onclick="setView('done',this)"><span class="nav-label">Completed</span><span class="nav-count" id="count-done">0</span></div>
+      <div class="nav-item active" id="nav-all" onclick="setSidebarView('all',this)"><span class="nav-label">All tasks</span><span class="nav-count" id="count-all">0</span></div>
+      <div class="nav-item" id="nav-ov" onclick="setSidebarView('ov',this)"><span class="nav-label">Overdue</span><span class="nav-count red" id="count-ov">0</span></div>
+      <div class="nav-item" id="nav-today" onclick="setSidebarView('today',this)"><span class="nav-label">Today</span><span class="nav-count amber" id="count-today">0</span></div>
+      <div class="nav-item" id="nav-week" onclick="setSidebarView('week',this)"><span class="nav-label">This week</span><span class="nav-count blue" id="count-week">0</span></div>
+      <div class="nav-item" id="nav-next" onclick="setSidebarView('next',this)"><span class="nav-label">Upcoming</span><span class="nav-count" id="count-next">0</span></div>
+      <div class="nav-item" id="nav-done" onclick="setSidebarView('done',this)"><span class="nav-label">Completed</span><span class="nav-count" id="count-done">0</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Clients</div>
@@ -188,12 +221,11 @@
   </div>
 
   <div class="main">
-    <div class="stats">
-      <div class="stat"><div class="stat-label">Overdue</div><div class="stat-num red" id="stat-ov">0</div></div>
-      <div class="stat"><div class="stat-label">Today</div><div class="stat-num amber" id="stat-today">0</div></div>
-      <div class="stat"><div class="stat-label">Next 7 days</div><div class="stat-num blue" id="stat-soon">0</div></div>
-      <div class="stat"><div class="stat-label">Completed</div><div class="stat-num green" id="stat-done">0</div></div>
+    <div class="view-tabs">
+      <button class="view-tab active" id="tab-timeline" onclick="setViewTab('timeline')">By Date</button>
+      <button class="view-tab" id="tab-jobs" onclick="setViewTab('jobs')">By Job</button>
     </div>
+    <div class="stats" id="stats-row"></div>
     <div id="task-container"></div>
   </div>
 </div>
@@ -207,8 +239,9 @@
       <div class="form-group"><label class="form-label">Job number</label><input class="form-input" id="f-jobnum" placeholder="e.g. DC26077" /></div>
       <div class="form-group"><label class="form-label">Client</label><input class="form-input" id="f-client" placeholder="e.g. Delta Community CU" /></div>
     </div>
-    <div class="form-group"><label class="form-label">Task (Snapshot phrase)</label><input class="form-input" id="f-task" placeholder="e.g. R2: Creative out" /></div>
-    <div class="form-group"><label class="form-label">What they're asking for</label><textarea class="form-textarea" id="f-ask" placeholder="Paste the ask from the email..."></textarea></div>
+    <div class="form-group"><label class="form-label">Job name</label><input class="form-input" id="f-jobname" placeholder="e.g. Summer RAF" /></div>
+    <div class="form-group"><label class="form-label">Task</label><input class="form-input" id="f-task" placeholder="e.g. R2: Creative out" /></div>
+    <div class="form-group"><label class="form-label">Notes / ask from email</label><textarea class="form-textarea" id="f-ask" placeholder="Paste the ask from the email..."></textarea></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Due date</label><input class="form-input" type="date" id="f-due" /></div>
       <div class="form-group"><label class="form-label">Deliverable type</label>
@@ -234,7 +267,7 @@
     <div class="upload-area" onclick="document.getElementById('csv-input').click()">
       <div style="font-size:22px;margin-bottom:6px">⬆</div>
       <div>Click to select CSV file</div>
-      <div style="font-size:10px;margin-top:3px">Tasks already in the tracker won't be duplicated</div>
+      <div style="font-size:10px;margin-top:3px;color:var(--text3)">Tasks already in the tracker won't be duplicated</div>
     </div>
     <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCSV(event)" />
     <div id="upload-status" style="margin-top:10px;font-size:11px;color:var(--text3)"></div>
@@ -243,92 +276,51 @@
 </div>
 
 <script>
-const STORAGE_KEY = 'gain_snapshot_v3';
-const DONE_KEY = 'gain_done_v3';
-const THEME_KEY = 'gain_theme';
+const STORAGE_KEY='gain_snap_v4';
+const DONE_KEY='gain_done_v4';
+const THEME_KEY='gain_theme';
 
-// LANGUAGE MAPPING — Status Report → Snapshot
-const TASK_MAP = {
-  // EM
-  'r1 - creative to dc': 'R1: Creative out',
-  'r1 – creative to dc': 'R1: Creative out',
-  'r1 – creative presentation': 'R1: Creative out',
-  'r1 – send story boards to dc': 'R1: Creative out',
-  'r1 – send creative to dc': 'R1: Creative out',
-  'creative revisions due to gain': 'R1: Revisions in',
-  'revisions due to gain': 'R1: Revisions in',
-  'concept selection / creative revisions due to gain': 'R1: Revisions in',
-  'r2 - revised creative to dc': 'R2: Creative out',
-  'r2 – revised creative to dc': 'R2: Creative out',
-  'r2 - revised creative': 'R2: Creative out',
-  'creative revisions due to gain (r3)': 'R2: Revisions in',
-  'revisions due to gain (r3)': 'R2: Revisions in',
-  'r3 - revised creative to dc': 'R3: Creative out',
-  'r3 – revised creative to dc': 'R3: Creative out',
-  'r3 - creative to dc': 'R3: Creative out',
-  'r3 – creative to dc': 'R3: Creative out',
-  'creative approval due to gain': 'Creative Approval',
-  'creative approval & links due to gain': 'Creative Approval',
-  'creative approval due to gain (final approval on content)': 'Creative Approval',
-  'html coding': 'Art to Dev',
-  'html to cassie': 'Release to Cassie',
-  'creative assets to dc': 'Assets to DC FTP',
-  'art releases to printer': null, // vendor-dependent, handled separately
-  'qc meeting (internal gain)': 'QC Meeting',
-  'creative start-up / brief to gain': 'Start-Up',
-  'creative start-up': 'Start-Up',
-  'creative presentation': 'Creative Presentation',
-  'print proofs to gain & dc': 'Print Proofs In',
-  'print proofs approved': 'Print Proofs Approval',
-  'upload banner assets': 'Assets to DC FTP',
-  'upload file for dc': 'Assets to DC FTP',
-  'creative to ken for production': 'Creative to Dev',
-  'send video link to dc': 'Video out',
-  'make any last updates/dc final sign-off': 'Video Approval',
-  'email blast': 'Email Blast',
-  'fwup em': 'Email Blast',
+const TASK_MAP={
+  'r1 - creative to dc':'R1: Creative out','r1 – creative to dc':'R1: Creative out',
+  'r1 – creative presentation':'R1: Creative out','r1 – send story boards to dc':'R1: Creative out',
+  'r1 – send creative to dc':'R1: Creative out','r1 - send creative to dc':'R1: Creative out',
+  'creative revisions due to gain':'R1: Revisions in','revisions due to gain':'R1: Revisions in',
+  'concept selection / creative revisions due to gain':'R1: Revisions in',
+  'r2 - revised creative to dc':'R2: Creative out','r2 – revised creative to dc':'R2: Creative out',
+  'creative revisions due to gain (r3)':'R2: Revisions in','revisions due to gain (r3)':'R2: Revisions in',
+  'r3 - revised creative to dc':'R3: Creative out','r3 – revised creative to dc':'R3: Creative out',
+  'r3 - creative to dc':'R3: Creative out','r3 – creative to dc':'R3: Creative out',
+  'creative approval due to gain':'Creative Approval','creative approval & links due to gain':'Creative Approval',
+  'creative approval due to gain (final approval on content)':'Creative Approval',
+  'html coding':'Art to Dev','html to cassie':'Release to Cassie',
+  'creative assets to dc':'Assets to DC FTP','upload banner assets':'Assets to DC FTP',
+  'upload file for dc':'Assets to DC FTP','qc meeting (internal gain)':'QC Meeting',
+  'creative start-up / brief to gain':'Start-Up','creative start-up':'Start-Up',
+  'creative presentation':'Creative Presentation','print proofs to gain & dc':'Print Proofs In',
+  'print proofs approved':'Print Proofs Approval','creative to ken for production':'Creative to Dev',
+  'send video link to dc':'Video out','make any last updates/dc final sign-off':'Video Approval',
+  'email blast':'Email Blast',
 };
+const VENDOR_MAP={'wallace graphics':'Wallace','drummond':'Drummond','salem one':'Salem','ip comm':'IP Comm','nahan':'Nahan'};
 
-const VENDOR_MAP = {
-  'wallace graphics': 'Wallace',
-  'drummond': 'Drummond',
-  'salem one': 'Salem',
-  'ip comm': 'IP Comm',
-  'nahan': 'Nahan',
-};
-
-function translateTask(rawTask, vendor) {
-  const key = rawTask.toLowerCase().trim();
-  if (key.includes('art releases to printer') || key.includes('art to vendor')) {
-    const v = vendor ? (VENDOR_MAP[vendor.toLowerCase()] || vendor) : 'Vendor';
+function translateTask(raw, vendor){
+  const key=(raw||'').toLowerCase().trim();
+  if(key.includes('art releases to printer')||key.includes('art to vendor')){
+    const v=vendor?(VENDOR_MAP[vendor.toLowerCase()]||vendor):'Vendor';
     return `Art to Vendor (${v})`;
   }
-  for (const [k, v] of Object.entries(TASK_MAP)) {
-    if (key === k || key.includes(k)) return v;
-  }
-  return rawTask; // fallback: keep original
+  for(const[k,v] of Object.entries(TASK_MAP)){if(key===k||key.startsWith(k)) return v;}
+  return raw;
 }
 
-// Campaign vendors from status report
-const CAMPAIGN_VENDORS = {
-  'DC26077': 'Wallace Graphics',
-  'DC26063': 'Wallace Graphics',
-  'DC26207': 'Wallace Graphics',
-  'DC26080': 'TBD',
-  'DC26203': 'Wallace Graphics',
-};
-
-function getVendorForCampaign(campaignStr) {
-  if (!campaignStr) return null;
-  for (const [code, vendor] of Object.entries(CAMPAIGN_VENDORS)) {
-    if (campaignStr.includes(code)) return vendor;
-  }
-  return null;
+function fmtCampaign(raw){
+  // Remove // and extra spaces: "DC26077 // Summer RAF" -> "DC26077 Summer RAF"
+  return (raw||'').replace(/\s*\/\/\s*/g,' ').trim();
 }
 
-const SEED_TASKS = [
-  {id:'s1',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'HTML to Cassie',type:'EM/FWUP',due:'2026-05-26',vendor:'Wallace Graphics',source:'report'},
-  {id:'s2',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Creative assets to DC',type:'EM/FWUP',due:'2026-05-28',vendor:'Wallace Graphics',source:'report'},
+const SEED=[
+  {id:'s1',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'HTML to Cassie',type:'EM',due:'2026-05-26',vendor:'Wallace Graphics',source:'report'},
+  {id:'s2',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Creative assets to DC',type:'EM',due:'2026-05-28',vendor:'Wallace Graphics',source:'report'},
   {id:'s3',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Email blast',type:'EM',due:'2026-06-04',vendor:'Wallace Graphics',source:'report'},
   {id:'s4',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Email blast',type:'FWUP EM',due:'2026-07-07',vendor:'Wallace Graphics',source:'report'},
   {id:'s5',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Upload file for DC',type:'Branch Video',due:'2026-05-29',vendor:'Wallace Graphics',source:'report'},
@@ -341,10 +333,10 @@ const SEED_TASKS = [
   {id:'s12',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Art releases to printer',type:'FWUP DM',due:'2026-06-08',vendor:'Wallace Graphics',source:'report'},
   {id:'s13',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative assets to DC',type:'FWUP DM',due:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
   {id:'s14',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Email blast',type:'EM',due:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
-  {id:'s15',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'HTML Coding',type:'EM',due:'2026-05-29',dueEnd:'2026-06-04',source:'report'},
-  {id:'s16',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'HTML to Cassie',type:'EM',due:'2026-06-04',source:'report'},
-  {id:'s17',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'Creative assets to DC',type:'EM',due:'2026-06-05',source:'report'},
-  {id:'s18',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'Email blast',type:'EM',due:'2026-06-17',source:'report'},
+  {id:'s15',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'HTML Coding',type:'EM',due:'2026-05-29',dueEnd:'2026-06-04',source:'report'},
+  {id:'s16',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'HTML to Cassie',type:'EM',due:'2026-06-04',source:'report'},
+  {id:'s17',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'Creative assets to DC',type:'EM',due:'2026-06-05',source:'report'},
+  {id:'s18',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'Email blast',type:'EM',due:'2026-06-17',source:'report'},
   {id:'s19',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML Coding',type:'EM',due:'2026-05-27',dueEnd:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
   {id:'s20',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML to Cassie',type:'EM',due:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
   {id:'s21',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative assets to DC',type:'EM',due:'2026-06-03',vendor:'Wallace Graphics',source:'report'},
@@ -368,13 +360,13 @@ const SEED_TASKS = [
   {id:'s39',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'HTML to Cassie',type:'EM',due:'2026-07-08',source:'report'},
   {id:'s40',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative assets to DC',type:'EM',due:'2026-07-09',source:'report'},
   {id:'s41',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Email blast',type:'EM',due:'2026-07-16',source:'report'},
-  {id:'s42',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-06-22',source:'report'},
-  {id:'s43',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-29',source:'report'},
-  {id:'s44',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-07-08',source:'report'},
-  {id:'s45',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'HTML Coding',type:'EM',due:'2026-07-14',dueEnd:'2026-07-20',source:'report'},
-  {id:'s46',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-20',source:'report'},
-  {id:'s47',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-21',source:'report'},
-  {id:'s48',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'report'},
+  {id:'s42',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-06-22',source:'report'},
+  {id:'s43',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-29',source:'report'},
+  {id:'s44',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-07-08',source:'report'},
+  {id:'s45',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'HTML Coding',type:'EM',due:'2026-07-14',dueEnd:'2026-07-20',source:'report'},
+  {id:'s46',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-20',source:'report'},
+  {id:'s47',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-21',source:'report'},
+  {id:'s48',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'report'},
   {id:'s49',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative start-up',type:'EM',due:'2026-06-03',source:'report'},
   {id:'s50',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-06-16',source:'report'},
   {id:'s51',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-23',source:'report'},
@@ -418,13 +410,13 @@ const SEED_TASKS = [
   {id:'s89',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML to Cassie',type:'FWUP EM',due:'2026-08-07',vendor:'Wallace Graphics',source:'report'},
   {id:'s90',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'FWUP EM',due:'2026-08-10',vendor:'Wallace Graphics',source:'report'},
   {id:'s91',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Email blast',type:'FWUP EM',due:'2026-08-18',vendor:'Wallace Graphics',source:'report'},
-  {id:'s92',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-07-15',source:'report'},
-  {id:'s93',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-27',source:'report'},
-  {id:'s94',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-08-03',source:'report'},
-  {id:'s95',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'HTML Coding',type:'EM',due:'2026-08-10',dueEnd:'2026-08-14',source:'report'},
-  {id:'s96',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-14',source:'report'},
-  {id:'s97',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-17',source:'report'},
-  {id:'s98',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'Email blast',type:'EM',due:'2026-08-25',source:'report'},
+  {id:'s92',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-07-15',source:'report'},
+  {id:'s93',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-27',source:'report'},
+  {id:'s94',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-08-03',source:'report'},
+  {id:'s95',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'HTML Coding',type:'EM',due:'2026-08-10',dueEnd:'2026-08-14',source:'report'},
+  {id:'s96',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-14',source:'report'},
+  {id:'s97',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-17',source:'report'},
+  {id:'s98',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Email blast',type:'EM',due:'2026-08-25',source:'report'},
   {id:'s99',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-07-20',source:'report'},
   {id:'s100',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-28',source:'report'},
   {id:'s101',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-08-05',source:'report'},
@@ -437,132 +429,251 @@ const SEED_TASKS = [
   {id:'s108',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 - Revised creative to DC',type:'Banners',due:'2026-08-24',source:'report'},
   {id:'s109',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative assets to DC',type:'Banners',due:'2026-08-28',source:'report'},
 ];
+SEED.forEach(t=>{t.task=translateTask(t.task,t.vendor||null);t.campaign=fmtCampaign(t.campaign);});
 
-// Translate all seed tasks on load
-SEED_TASKS.forEach(t => { t.task = translateTask(t.task, t.vendor || null); });
+let tasks=[],done=new Set(),sidebarView='all',currentClient=null,viewTab='timeline',dragSrcId=null;
 
-let tasks = [], done = new Set(), currentView = 'all', currentClient = null, dragSrcId = null;
-
-function loadState() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  const savedDone = localStorage.getItem(DONE_KEY);
-  tasks = saved ? JSON.parse(saved) : SEED_TASKS.map(t => ({...t}));
-  done = savedDone ? new Set(JSON.parse(savedDone)) : new Set();
+function loadState(){
+  const s=localStorage.getItem(STORAGE_KEY),d=localStorage.getItem(DONE_KEY);
+  tasks=s?JSON.parse(s):SEED.map(t=>({...t}));
+  done=d?new Set(JSON.parse(d)):new Set();
 }
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-  localStorage.setItem(DONE_KEY, JSON.stringify([...done]));
+function saveState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks));
+  localStorage.setItem(DONE_KEY,JSON.stringify([...done]));
 }
 
-function pd(s) { if(!s) return null; const[y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function fd(s) { if(!s) return ''; return pd(s).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-function todayD() { const t=new Date(); t.setHours(0,0,0,0); return t; }
+function pd(s){if(!s)return null;const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function fd(s,withDay){
+  if(!s)return '';
+  const d=pd(s);
+  if(withDay) return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function todayD(){const t=new Date();t.setHours(0,0,0,0);return t;}
+function tomorrowD(){const t=todayD();t.setDate(t.getDate()+1);return t;}
+function endOfWeekD(){const t=todayD();t.setDate(t.getDate()+7);return t;}
+function endOfNextWeekD(){const t=todayD();t.setDate(t.getDate()+14);return t;}
 
-function getStatus(task) {
-  if (done.has(task.id)) return 'done';
-  const sd = task.dueEnd || task.due;
-  const d = pd(sd); d.setHours(0,0,0,0);
-  const t = todayD();
-  if (d < t) return 'ov';
-  if (d.getTime() === t.getTime()) return 'today';
-  const week = new Date(t); week.setDate(week.getDate()+7);
-  if (d <= week) return 'soon';
-  return 'upcoming';
+function getStatus(task){
+  if(done.has(task.id))return'done';
+  const sd=task.dueEnd||task.due;
+  const d=pd(sd);d.setHours(0,0,0,0);
+  const t=todayD(),tom=tomorrowD(),eow=endOfWeekD(),eonw=endOfNextWeekD();
+  if(d<t)return'ov';
+  if(d.getTime()===t.getTime())return'today';
+  if(d.getTime()===tom.getTime())return'tomorrow';
+  if(d<=eow)return'week';
+  if(d<=eonw)return'next';
+  return'upcoming';
 }
 
-function statusLabel(s) {
-  return {ov:'Overdue',today:'Today',soon:'This week',upcoming:'Upcoming',done:'Done'}[s]||s;
-}
+function statusLabel(s){return{ov:'Overdue',today:'Today',tomorrow:'Tomorrow',week:'This week',next:'Next week',upcoming:'Upcoming',done:'Done'}[s]||s;}
 
-function render() {
-  const t = todayD();
-  document.getElementById('live-date').textContent = t.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+function render(){
+  const t=todayD();
+  document.getElementById('live-date').textContent=t.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
 
-  let filtered = tasks.filter(task => {
-    const s = getStatus(task);
-    if (currentClient && task.c !== currentClient) return false;
-    if (currentView === 'all') return s !== 'done';
-    if (currentView === 'done') return s === 'done';
-    return s === currentView;
-  });
-  filtered.sort((a,b) => pd(a.dueEnd||a.due) - pd(b.dueEnd||b.due));
+  const counts={ov:0,today:0,tomorrow:0,week:0,next:0,upcoming:0,done:0};
+  tasks.forEach(task=>{const s=getStatus(task);counts[s]=(counts[s]||0)+1;});
 
-  const counts = {ov:0,today:0,soon:0,upcoming:0,done:0};
-  tasks.forEach(task => { const s=getStatus(task); counts[s]=(counts[s]||0)+1; });
+  // Stats bar
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat"><div class="stat-label">Overdue</div><div class="stat-num red">${counts.ov}</div></div>
+    <div class="stat"><div class="stat-label">Today</div><div class="stat-num amber">${counts.today}</div></div>
+    <div class="stat"><div class="stat-label">Tomorrow</div><div class="stat-num purple">${counts.tomorrow}</div></div>
+    <div class="stat"><div class="stat-label">This week</div><div class="stat-num blue">${counts.week}</div></div>
+    <div class="stat"><div class="stat-label">Completed</div><div class="stat-num green">${counts.done}</div></div>
+  `;
 
-  ['ov','today','soon','done'].forEach(k => {
-    document.getElementById('stat-'+k).textContent = counts[k];
-    document.getElementById('count-'+k).textContent = counts[k];
-  });
-  document.getElementById('count-upcoming').textContent = counts.upcoming;
-  document.getElementById('count-all').textContent = tasks.filter(t=>getStatus(t)!=='done').length;
+  // Sidebar counts
+  document.getElementById('count-all').textContent=tasks.filter(t=>getStatus(t)!=='done').length;
+  document.getElementById('count-ov').textContent=counts.ov;
+  document.getElementById('count-today').textContent=counts.today;
+  document.getElementById('count-week').textContent=counts.week+counts.tomorrow;
+  document.getElementById('count-next').textContent=counts.next+counts.upcoming;
+  document.getElementById('count-done').textContent=counts.done;
 
-  const clients = [...new Set(tasks.map(t=>t.c))];
-  document.getElementById('client-list').innerHTML = clients.map(cl =>
-    `<div class="nav-item${currentClient===cl?' active':''}" onclick="setClient('${cl}')">
+  // Client list
+  const clients=[...new Set(tasks.map(t=>t.c))];
+  document.getElementById('client-list').innerHTML=clients.map(cl=>
+    `<div class="nav-item${currentClient===cl?' active':''}" onclick="setClient('${cl.replace(/'/g,"\\'")}')">
       <span class="nav-label">${cl}</span>
       <span class="nav-count">${tasks.filter(t=>t.c===cl&&getStatus(t)!=='done').length}</span>
     </div>`
-  ).join('') + (currentClient ? `<div class="nav-item" onclick="setClient(null)"><span class="nav-label" style="color:var(--text3)">← All clients</span></div>` : '');
+  ).join('')+(currentClient?`<div class="nav-item" onclick="setClient(null)"><span class="nav-label" style="color:var(--text3)">← All clients</span></div>`:'');
 
-  let html = '';
-  if (!filtered.length) {
-    html = '<div class="empty">Nothing here.</div>';
-  } else if (currentView === 'all') {
-    [{key:'ov',label:'Overdue'},{key:'today',label:`Today — ${t.toLocaleDateString('en-US',{month:'long',day:'numeric'})}`},{key:'soon',label:'Next 7 days'},{key:'upcoming',label:'Upcoming'}].forEach(g => {
-      const gt = filtered.filter(task=>getStatus(task)===g.key);
-      if (!gt.length) return;
-      html += `<div class="group-header"><span>${g.label}</span><span>${gt.length} task${gt.length!==1?'s':''}</span></div>`;
-      html += `<div class="task-list">${gt.map(taskRow).join('')}</div>`;
+  if(viewTab==='timeline') renderTimeline(counts);
+  else renderJobs();
+}
+
+function renderTimeline(counts){
+  let filtered=tasks.filter(task=>{
+    if(currentClient&&task.c!==currentClient)return false;
+    const s=getStatus(task);
+    if(sidebarView==='all')return s!=='done';
+    if(sidebarView==='done')return s==='done';
+    if(sidebarView==='week')return s==='week'||s==='tomorrow';
+    if(sidebarView==='next')return s==='next'||s==='upcoming';
+    return s===sidebarView;
+  });
+  filtered.sort((a,b)=>pd(a.dueEnd||a.due)-pd(b.dueEnd||b.due));
+
+  let html='';
+  if(!filtered.length){html='<div class="empty">Nothing here.</div>';}
+  else if(sidebarView==='all'){
+    const groups=[
+      {key:'ov',label:'Overdue',cls:'red'},
+      {key:'today',label:`Today — ${todayD().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`,cls:'amber'},
+      {key:'tomorrow',label:`Tomorrow — ${tomorrowD().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`,cls:'purple'},
+      {key:'week',label:'This week',cls:'blue'},
+      {key:'next',label:'Next week',cls:''},
+      {key:'upcoming',label:'Upcoming',cls:''},
+    ];
+    groups.forEach(g=>{
+      const gt=filtered.filter(task=>getStatus(task)===g.key);
+      if(!gt.length)return;
+      html+=`<div class="group-header ${g.cls}"><span>${g.label}</span><span style="font-weight:400">${gt.length} task${gt.length!==1?'s':''}</span></div>`;
+      html+=`<div class="task-list">${gt.map(t=>taskRow(t)).join('')}</div>`;
     });
+    // Completed at bottom
+    const doneItems=tasks.filter(t=>{
+      if(currentClient&&t.c!==currentClient)return false;
+      return getStatus(t)==='done';
+    });
+    if(doneItems.length){
+      html+=`<div class="group-header green"><span>Completed</span><span style="font-weight:400">${doneItems.length} task${doneItems.length!==1?'s':''}</span></div>`;
+      html+=`<div class="task-list">${doneItems.map(t=>taskRow(t)).join('')}</div>`;
+    }
   } else {
-    html = `<div class="task-list">${filtered.map(taskRow).join('')}</div>`;
+    html=`<div class="task-list">${filtered.map(t=>taskRow(t)).join('')}</div>`;
+    if(sidebarView==='done'){
+      // already showing done
+    } else {
+      // show completed at bottom for filtered views too
+      const doneItems=tasks.filter(t=>{
+        if(currentClient&&t.c!==currentClient)return false;
+        return getStatus(t)==='done';
+      });
+      if(doneItems.length){
+        html+=`<div class="group-header green" style="margin-top:16px"><span>Completed</span><span style="font-weight:400">${doneItems.length}</span></div>`;
+        html+=`<div class="task-list">${doneItems.map(t=>taskRow(t)).join('')}</div>`;
+      }
+    }
   }
-  document.getElementById('task-container').innerHTML = html;
+  document.getElementById('task-container').innerHTML=html;
   attachDrag();
 }
 
-function taskRow(task) {
-  const s = getStatus(task);
-  const isDone = s === 'done';
-  const dateStr = task.dueEnd
-    ? `${fd(task.due)}<span class="rng">thru ${fd(task.dueEnd)}</span>`
-    : fd(task.due);
-  const srcIcon = task.source === 'email' ? '📧' : '📄';
+function taskRow(task){
+  const s=getStatus(task);
+  const isDone=s==='done';
+  const dateStr=task.dueEnd
+    ?`${fd(task.due,true)}<span class="rng">thru ${fd(task.dueEnd)}</span>`
+    :fd(task.due,true);
   return `<div class="task-row status-${s}${isDone?' done':''}" draggable="true" data-id="${task.id}">
     <input type="checkbox" class="task-check" ${isDone?'checked':''} onchange="toggleDone('${task.id}')" />
     <div class="task-date">${dateStr}</div>
-    <div><div class="task-name">${task.task}</div><div class="task-campaign">${task.campaign}</div></div>
     <div class="type-badge">${task.type}</div>
+    <div><div class="task-name">${task.task}</div><div class="task-campaign">${task.campaign}</div></div>
     <div class="status-badge ${s}">${statusLabel(s)}</div>
-    <div class="source-badge">${srcIcon} ${task.source}</div>
+    <div style="font-size:10px;color:var(--text3);text-align:right">${task.source==='email'?'📧':'📄'}</div>
   </div>`;
 }
 
-function toggleDone(id) { done.has(id)?done.delete(id):done.add(id); saveState(); render(); }
-function setView(v, el) {
-  currentView=v; currentClient=null;
+function renderJobs(){
+  let taskList=tasks.filter(t=>{
+    if(currentClient&&t.c!==currentClient)return false;
+    return getStatus(t)!=='done';
+  });
+  const campaigns=[...new Set(taskList.map(t=>t.campaign))];
+  if(!campaigns.length){document.getElementById('task-container').innerHTML='<div class="empty">Nothing here.</div>';return;}
+
+  let html='';
+  campaigns.forEach(camp=>{
+    const campTasks=taskList.filter(t=>t.campaign===camp);
+    const statuses=campTasks.map(t=>getStatus(t));
+    const hasOv=statuses.includes('ov');
+    const hasToday=statuses.includes('today');
+    const hasTom=statuses.includes('tomorrow');
+    const hasWeek=statuses.includes('week');
+    const doneCt=tasks.filter(t=>t.campaign===camp&&getStatus(t)==='done').length;
+    const totalCt=tasks.filter(t=>t.campaign===camp).length;
+
+    let badgeHtml='';
+    if(hasOv) badgeHtml+=`<span class="job-badge red">Overdue</span>`;
+    if(hasToday) badgeHtml+=`<span class="job-badge amber">Due today</span>`;
+    if(hasTom) badgeHtml+=`<span class="job-badge" style="background:var(--purple-bg);color:var(--purple)">Tomorrow</span>`;
+    if(hasWeek) badgeHtml+=`<span class="job-badge blue">This week</span>`;
+    if(doneCt>0) badgeHtml+=`<span class="job-badge green">${doneCt}/${totalCt} done</span>`;
+
+    const id='job_'+camp.replace(/\W/g,'_');
+    html+=`<div class="job-card">
+      <div class="job-header" onclick="toggleJob('${id}')">
+        <div>
+          <div class="job-title">${camp}</div>
+          <div class="job-meta">${campTasks.length} task${campTasks.length!==1?'s':''} remaining</div>
+        </div>
+        <div class="job-badges">
+          ${badgeHtml}
+          <span class="job-chevron" id="chev_${id}">▶</span>
+        </div>
+      </div>
+      <div class="job-tasks" id="${id}">
+        ${campTasks.sort((a,b)=>pd(a.dueEnd||a.due)-pd(b.dueEnd||b.due)).map(t=>`
+          <div class="job-task-row${getStatus(t)==='done'?' done':''}">
+            <input type="checkbox" class="task-check" ${done.has(t.id)?'checked':''} onchange="toggleDone('${t.id}')" />
+            <div class="task-date">${fd(t.due,true)}</div>
+            <div class="type-badge">${t.type}</div>
+            <div><div class="task-name">${t.task}</div></div>
+            <div class="status-badge ${getStatus(t)}">${statusLabel(getStatus(t))}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('task-container').innerHTML=html;
+}
+
+function toggleJob(id){
+  const el=document.getElementById(id);
+  const chev=document.getElementById('chev_'+id);
+  if(el.classList.contains('open')){el.classList.remove('open');chev.classList.remove('open');}
+  else{el.classList.add('open');chev.classList.add('open');}
+}
+
+function toggleDone(id){done.has(id)?done.delete(id):done.add(id);saveState();render();}
+
+function setSidebarView(v,el){
+  sidebarView=v;currentClient=null;
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-  if(el) el.classList.add('active');
+  if(el)el.classList.add('active');
   render();
 }
-function setClient(c) { currentClient=c; currentView='all'; document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); render(); }
+function setViewTab(v){
+  viewTab=v;
+  document.getElementById('tab-timeline').classList.toggle('active',v==='timeline');
+  document.getElementById('tab-jobs').classList.toggle('active',v==='jobs');
+  render();
+}
+function setClient(c){currentClient=c;sidebarView='all';document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));document.getElementById('nav-all').classList.add('active');render();}
 
-function addTask() {
+function addTask(){
   const jobnum=document.getElementById('f-jobnum').value.trim();
   const client=document.getElementById('f-client').value.trim();
+  const jobname=document.getElementById('f-jobname').value.trim();
   const task=document.getElementById('f-task').value.trim();
   const due=document.getElementById('f-due').value;
   const type=document.getElementById('f-type').value;
   if(!task||!due){alert('Task name and due date are required.');return;}
-  tasks.unshift({id:'e'+Date.now(),c:client||'Other',campaign:jobnum?(jobnum+(client?' // '+client:'')):(client||'Other'),task,type,due,source:'email'});
-  saveState(); closeModal('add-modal');
-  ['f-jobnum','f-client','f-task','f-ask','f-due'].forEach(id=>document.getElementById(id).value='');
+  const camp=jobnum&&jobname?`${jobnum} ${jobname}`:jobnum||jobname||client||'Other';
+  tasks.unshift({id:'e'+Date.now(),c:client||'Other',campaign:camp,task,type,due,source:'email'});
+  saveState();closeModal('add-modal');
+  ['f-jobnum','f-client','f-jobname','f-task','f-ask','f-due'].forEach(id=>document.getElementById(id).value='');
   render();
 }
 
-function handleCSV(e) {
-  const file=e.target.files[0]; if(!file) return;
+function handleCSV(e){
+  const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=function(ev){
     const lines=ev.target.result.split('\n').filter(l=>l.trim());
@@ -570,33 +681,33 @@ function handleCSV(e) {
     let imported=0;
     for(let i=1;i<lines.length;i++){
       const vals=lines[i].split(',').map(v=>v.trim().replace(/"/g,''));
-      const row={}; headers.forEach((h,idx)=>row[h]=vals[idx]||'');
-      if(!row.task||!row.due) continue;
+      const row={};headers.forEach((h,idx)=>row[h]=vals[idx]||'');
+      if(!row.task||!row.due)continue;
       const id='csv_'+((row.campaign||'').replace(/\W/g,''))+'_'+(row.task.replace(/\W/g,'').slice(0,12));
-      if(tasks.find(t=>t.id===id)) continue;
-      const translated = translateTask(row.task, row.vendor||null);
-      tasks.push({id,c:row.client||'Imported',campaign:row.campaign||'Imported',task:translated,type:row.type||'Other',due:row.due,dueEnd:row.dueend||null,vendor:row.vendor||null,source:'report'});
+      if(tasks.find(t=>t.id===id))continue;
+      const translated=translateTask(row.task,row.vendor||null);
+      const camp=fmtCampaign(row.campaign||'Imported');
+      tasks.push({id,c:row.client||'Imported',campaign:camp,task:translated,type:row.type||'Other',due:row.due,dueEnd:row.dueend||null,vendor:row.vendor||null,source:'report'});
       imported++;
     }
-    saveState(); render();
+    saveState();render();
     document.getElementById('upload-status').textContent=`✓ Imported ${imported} new task${imported!==1?'s':''}.`;
   };
   reader.readAsText(file);
 }
 
-function exportCSV() {
+function exportCSV(){
   const rows=tasks.map(t=>[t.c,t.campaign,t.task,t.type,t.due,t.dueEnd||'',t.vendor||'',t.source,done.has(t.id)?'yes':'no'].map(v=>`"${v}"`).join(','));
   const blob=new Blob([['client,campaign,task,type,due,dueEnd,vendor,source,done',...rows].join('\n')],{type:'text/csv'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='gain_snapshot.csv'; a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gain_snapshot.csv';a.click();
 }
 
-function clearCompleted() {
-  if(!confirm('Clear all completed tasks?')) return;
-  tasks=tasks.filter(t=>!done.has(t.id)); done.clear(); saveState(); render();
+function clearCompleted(){
+  if(!confirm('Clear all completed tasks?'))return;
+  tasks=tasks.filter(t=>!done.has(t.id));done.clear();saveState();render();
 }
 
-// DRAG & DROP
-function attachDrag() {
+function attachDrag(){
   document.querySelectorAll('.task-row[draggable]').forEach(row=>{
     row.addEventListener('dragstart',e=>{dragSrcId=e.currentTarget.dataset.id;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
     row.addEventListener('dragover',e=>{e.preventDefault();document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('drag-over'));e.currentTarget.classList.add('drag-over');});
@@ -605,30 +716,26 @@ function attachDrag() {
   });
 }
 
-// MODALS
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
 
-// THEME
-function toggleTheme() {
-  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
-  const next = isDark?'light':'dark';
+function toggleTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const next=isDark?'light':'dark';
   document.documentElement.setAttribute('data-theme',next);
   localStorage.setItem(THEME_KEY,next);
-  document.querySelector('.btn-icon').textContent = next==='dark'?'☀︎':'☾';
+  document.getElementById('theme-btn').textContent=next==='dark'?'☀︎':'☾';
 }
-function initTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+function initTheme(){
+  const saved=localStorage.getItem(THEME_KEY);
+  const theme=saved||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   document.documentElement.setAttribute('data-theme',theme);
-  document.querySelector('.btn-icon').textContent = theme==='dark'?'☀︎':'☾';
+  document.getElementById('theme-btn').textContent=theme==='dark'?'☀︎':'☾';
 }
 
-initTheme();
-loadState();
-render();
-setInterval(render, 60000);
+initTheme();loadState();render();
+setInterval(render,60000);
 </script>
 </body>
 </html>
