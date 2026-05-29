@@ -6,15 +6,13 @@
 <title>Gain // Snapshot</title>
 <style>
 :root{
-  --bg:#ffffff;--surface:#f8f8f6;--surface2:#f0f0ed;--surface3:#e8e8e4;
+  --bg:#fff;--surface:#f8f8f6;--surface2:#f0f0ed;--surface3:#e8e8e4;
   --border:#e4e4e0;--border2:#d0d0cb;
   --text:#1a1a18;--text2:#666660;--text3:#aaa9a3;
   --accent:#3a6b2a;--accent-light:#edf4ea;
-  --red:#c0392b;--red-bg:#fdf1f0;
-  --amber:#b45309;--amber-bg:#fef9ee;
-  --blue:#1d5fa3;--blue-bg:#eff5fd;
-  --purple:#6b3a9e;--purple-bg:#f5f0fd;
-  --green:#2d6a2d;--green-bg:#f0f7f0;
+  --red:#c0392b;--red-bg:#fdf1f0;--red-border:#f5c0bb;
+  --green:#2d6a2d;--green-bg:#f0f7f0;--green-border:#b8ddb8;
+  --blue:#1d5fa3;--blue-bg:#eff5fd;--blue-border:#b5d4f4;
   --radius:8px;--radius-sm:5px;
 }
 [data-theme="dark"]{
@@ -22,11 +20,9 @@
   --border:#2e2e2e;--border2:#3a3a3a;
   --text:#f0f0f0;--text2:#999;--text3:#555;
   --accent:#8fce6a;--accent-light:#1a2a14;
-  --red:#ff6b6b;--red-bg:#1f1010;
-  --amber:#f5a623;--amber-bg:#1f1700;
-  --blue:#5aadff;--blue-bg:#0d1a2e;
-  --purple:#b08aff;--purple-bg:#1a1030;
-  --green:#4ade80;--green-bg:#0a1f0f;
+  --red:#ff6b6b;--red-bg:#1f1010;--red-border:#5a1a1a;
+  --green:#4ade80;--green-bg:#0a1f0f;--green-border:#1a4a1a;
+  --blue:#5aadff;--blue-bg:#0d1a2e;--blue-border:#1a3a5a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:13px;min-height:100vh}
@@ -42,6 +38,44 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .btn-primary:hover{opacity:.88;color:#fff}
 .btn-icon{padding:6px 9px;font-size:14px}
 
+/* FOCUS LIST BANNER */
+.focus-bar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:50px;z-index:90}
+.focus-header{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 6px}
+.focus-title{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:8px}
+.focus-pill{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:500}
+.focus-pill.red{background:var(--red-bg);color:var(--red)}
+.focus-pill.gray{background:var(--surface2);color:var(--text3)}
+.focus-collapse{font-size:11px;color:var(--text3);cursor:pointer;border:none;background:none;padding:2px 8px;font-family:inherit}
+.focus-tasks{padding:0 20px 10px;display:flex;flex-direction:column;gap:3px}
+.focus-tasks.hidden{display:none}
+
+.f-task{display:grid;grid-template-columns:18px 16px 1fr auto auto;align-items:center;gap:9px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--radius-sm);cursor:grab;transition:border-color .1s,opacity .1s}
+.f-task:hover{border-color:var(--border2)}
+.f-task.s-ov{border-left-color:var(--red);background:var(--red-bg)}
+.f-task.s-today{border-left-color:var(--green);background:var(--green-bg)}
+.f-task.s-week{border-left-color:var(--blue);background:var(--blue-bg)}
+.f-task.s-next{border-left-color:var(--border2)}
+.f-task.s-upcoming{border-left-color:var(--border2)}
+.f-task.done{opacity:.4}
+.f-task.done .f-name{text-decoration:line-through}
+.f-task.dragging{opacity:.35}
+.f-task.drag-over{border-color:var(--accent)}
+.f-drag{color:var(--text3);font-size:13px;cursor:grab;user-select:none;text-align:center}
+.f-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;position:relative;transition:all .12s}
+.f-check:checked{background:var(--accent);border-color:var(--accent)}
+.f-check:checked::after{content:'✓';color:#fff;font-size:8px;font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-52%)}
+.f-name{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-meta{font-size:10px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-badge{font-size:9px;padding:2px 7px;border-radius:3px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.f-badge.ov{background:var(--red-bg);color:var(--red)}
+.f-badge.today{background:var(--green-bg);color:var(--green)}
+.f-badge.week{background:var(--blue-bg);color:var(--blue)}
+.f-badge.next{background:var(--surface2);color:var(--text3)}
+.f-badge.upcoming{background:var(--surface2);color:var(--text3)}
+.f-remove{font-size:14px;color:var(--text3);cursor:pointer;border:none;background:none;padding:0 2px;line-height:1;opacity:0;transition:opacity .1s}
+.f-task:hover .f-remove{opacity:1}
+
+/* LAYOUT */
 .layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 50px)}
 
 .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 0;position:sticky;top:50px;height:calc(100vh - 50px);overflow-y:auto}
@@ -53,20 +87,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .nav-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px}
 .nav-count{font-size:10px;padding:1px 5px;border-radius:8px;background:var(--surface2);color:var(--text3);flex-shrink:0}
 .nav-count.red{background:var(--red-bg);color:var(--red)}
-.nav-count.amber{background:var(--amber-bg);color:var(--amber)}
+.nav-count.green{background:var(--green-bg);color:var(--green)}
 .nav-count.blue{background:var(--blue-bg);color:var(--blue)}
 
-.doc-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 10px;margin:0 12px 8px;font-size:11px}
+.doc-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;margin:0 12px 6px;font-size:11px}
 .doc-card-label{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
 .doc-card-name{color:var(--text);font-weight:500;margin-bottom:2px;word-break:break-word}
 .doc-card-meta{font-size:10px;color:var(--text3)}
-.doc-upload-btn{width:100%;margin:4px 12px 0;padding:5px 0;font-family:inherit;font-size:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;display:block;text-align:center}
+.doc-upload-btn{width:calc(100% - 24px);margin:0 12px;padding:5px 0;font-family:inherit;font-size:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;display:block;text-align:center}
 .doc-upload-btn:hover{border-color:var(--accent);color:var(--accent)}
 
 .main{padding:20px;overflow-y:auto}
 
 .view-tabs{display:flex;gap:2px;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;width:fit-content}
-.view-tab{font-family:inherit;font-size:11px;padding:5px 14px;border-radius:4px;border:none;background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.03em;transition:all .12s}
+.view-tab{font-family:inherit;font-size:11px;padding:5px 14px;border-radius:4px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .12s}
 .view-tab.active{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
@@ -74,32 +108,29 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .stat-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
 .stat-num{font-size:24px;font-weight:700}
 .stat-num.red{color:var(--red)}
-.stat-num.amber{color:var(--amber)}
-.stat-num.blue{color:var(--blue)}
-.stat-num.purple{color:var(--purple)}
 .stat-num.green{color:var(--green)}
+.stat-num.blue{color:var(--blue)}
+.stat-num.muted{color:var(--text2)}
 
-.group-header{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding:14px 0 5px;border-top:1px solid var(--border);margin-top:2px;display:flex;justify-content:space-between;align-items:center}
+.group-header{font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:14px 0 5px;border-top:1px solid var(--border);margin-top:2px;display:flex;justify-content:space-between;align-items:center;color:var(--text3)}
 .group-header:first-child{border-top:none;padding-top:2px;margin-top:0}
 .group-header.red{color:var(--red)}
-.group-header.amber{color:var(--amber)}
-.group-header.blue{color:var(--blue)}
-.group-header.purple{color:var(--purple)}
 .group-header.green{color:var(--green)}
+.group-header.blue{color:var(--blue)}
 
 .task-list{display:flex;flex-direction:column;gap:2px;margin-bottom:4px}
-.task-row{display:grid;grid-template-columns:20px 110px 90px 1fr 80px;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;border-radius:var(--radius-sm);cursor:grab;transition:border-color .1s,opacity .1s}
+
+.task-row{display:grid;grid-template-columns:20px 110px 90px 1fr 80px;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--radius-sm);transition:border-color .1s,opacity .1s}
 .task-row:hover{border-color:var(--border2)}
+.task-row.s-ov{border-left-color:var(--red)}
+.task-row.s-today{border-left-color:var(--green)}
+.task-row.s-week{border-left-color:var(--blue)}
 .task-row.done{opacity:.4}
 .task-row.done .task-name{text-decoration:line-through;color:var(--text3)}
-.task-row.status-ov{border-left-color:var(--red)}
-.task-row.status-today{border-left-color:var(--amber)}
-.task-row.status-tomorrow{border-left-color:var(--purple)}
-.task-row.status-week{border-left-color:var(--blue)}
-.task-row.dragging{opacity:.4}
+.task-row.dragging{opacity:.35}
 .task-row.drag-over{border-color:var(--accent)}
 
-.task-check{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;transition:all .12s;position:relative}
+.task-check{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;position:relative;transition:all .12s}
 .task-check:checked{background:var(--accent);border-color:var(--accent)}
 .task-check:checked::after{content:'✓';color:#fff;font-size:9px;font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-52%)}
 
@@ -110,14 +141,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .task-campaign{font-size:10px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .status-badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600;text-align:center;white-space:nowrap}
 .status-badge.ov{background:var(--red-bg);color:var(--red)}
-.status-badge.today{background:var(--amber-bg);color:var(--amber)}
-.status-badge.tomorrow{background:var(--purple-bg);color:var(--purple)}
+.status-badge.today{background:var(--green-bg);color:var(--green)}
 .status-badge.week{background:var(--blue-bg);color:var(--blue)}
-.status-badge.next{background:var(--surface2);color:var(--text3)}
-.status-badge.upcoming{background:var(--surface2);color:var(--text3)}
+.status-badge.next,.status-badge.upcoming{background:var(--surface2);color:var(--text3)}
 .status-badge.done{background:var(--green-bg);color:var(--green)}
 
-.empty{padding:40px;text-align:center;color:var(--text3);font-size:13px}
+/* EDIT MODAL for inline date/name editing */
+.edit-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;align-items:center;justify-content:center}
+.edit-overlay.open{display:flex}
+.edit-modal{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;width:400px;max-width:95vw}
+.edit-title{font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text)}
+.edit-group{margin-bottom:12px}
+.edit-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;display:block}
+.edit-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:inherit;font-size:12px;padding:7px 9px;outline:none}
+.edit-input:focus{border-color:var(--accent)}
+.edit-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 
 /* BOARD VIEW */
 .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
@@ -128,16 +166,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .job-col-badges{display:flex;gap:4px;flex-wrap:wrap}
 .job-badge{font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500}
 .job-badge.red{background:var(--red-bg);color:var(--red)}
-.job-badge.amber{background:var(--amber-bg);color:var(--amber)}
-.job-badge.blue{background:var(--blue-bg);color:var(--blue)}
-.job-badge.purple{background:var(--purple-bg);color:var(--purple)}
 .job-badge.green{background:var(--green-bg);color:var(--green)}
+.job-badge.blue{background:var(--blue-bg);color:var(--blue)}
 .job-badge.gray{background:var(--surface2);color:var(--text3)}
-
 .del-group{border-top:1px solid var(--border)}
-.del-group:first-child{border-top:none}
 .del-label{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding:6px 14px 4px;background:var(--surface2)}
-.board-task{display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:1px solid var(--border)}
+.board-task{display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:1px solid var(--border);cursor:pointer}
+.board-task:hover{background:var(--surface2)}
 .board-task-check{width:13px;height:13px;border-radius:2px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;position:relative;transition:all .12s}
 .board-task-check:checked{background:var(--accent);border-color:var(--accent)}
 .board-task-check:checked::after{content:'✓';color:#fff;font-size:8px;font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-52%)}
@@ -147,11 +182,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .board-task.done .board-task-name{text-decoration:line-through;color:var(--text3)}
 .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dot-ov{background:var(--red)}
-.dot-today{background:var(--amber)}
-.dot-tomorrow{background:var(--purple)}
+.dot-today{background:var(--green)}
 .dot-week{background:var(--blue)}
-.dot-next,.dot-upcoming{background:var(--border2)}
-.dot-done{background:var(--green)}
+.dot-next,.dot-upcoming,.dot-done{background:var(--border2)}
+
+.empty{padding:40px;text-align:center;color:var(--text3);font-size:13px}
 
 /* MODALS */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
@@ -187,35 +222,43 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
   </div>
 </div>
 
+<!-- FOCUS LIST BANNER -->
+<div class="focus-bar">
+  <div class="focus-header">
+    <div class="focus-title">
+      ⚡ Focus List
+      <span class="focus-pill red" id="focus-today-pill" style="display:none"></span>
+      <span class="focus-pill gray" id="focus-total-pill"></span>
+    </div>
+    <button class="focus-collapse" id="focus-collapse-btn" onclick="toggleFocus()">▲</button>
+  </div>
+  <div class="focus-tasks" id="focus-tasks"></div>
+</div>
+
 <div class="layout">
   <div class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Views</div>
-      <div class="nav-item active" id="nav-all" onclick="setSidebarView('all',this)"><span class="nav-label">All tasks</span><span class="nav-count" id="count-all">0</span></div>
-      <div class="nav-item" id="nav-ov" onclick="setSidebarView('ov',this)"><span class="nav-label">Overdue</span><span class="nav-count red" id="count-ov">0</span></div>
-      <div class="nav-item" id="nav-today" onclick="setSidebarView('today',this)"><span class="nav-label">Today</span><span class="nav-count amber" id="count-today">0</span></div>
-      <div class="nav-item" id="nav-week" onclick="setSidebarView('week',this)"><span class="nav-label">This week</span><span class="nav-count blue" id="count-week">0</span></div>
-      <div class="nav-item" id="nav-next" onclick="setSidebarView('next',this)"><span class="nav-label">Upcoming</span><span class="nav-count" id="count-next">0</span></div>
-      <div class="nav-item" id="nav-done" onclick="setSidebarView('done',this)"><span class="nav-label">Completed</span><span class="nav-count" id="count-done">0</span></div>
+      <div class="nav-item active" id="nav-all" onclick="setSV('all',this)"><span class="nav-label">All tasks</span><span class="nav-count" id="count-all">0</span></div>
+      <div class="nav-item" id="nav-ov" onclick="setSV('ov',this)"><span class="nav-label">Overdue</span><span class="nav-count red" id="count-ov">0</span></div>
+      <div class="nav-item" id="nav-today" onclick="setSV('today',this)"><span class="nav-label">Today</span><span class="nav-count green" id="count-today">0</span></div>
+      <div class="nav-item" id="nav-week" onclick="setSV('week',this)"><span class="nav-label">This week</span><span class="nav-count blue" id="count-week">0</span></div>
+      <div class="nav-item" id="nav-next" onclick="setSV('next',this)"><span class="nav-label">Upcoming</span><span class="nav-count" id="count-next">0</span></div>
+      <div class="nav-item" id="nav-done" onclick="setSV('done',this)"><span class="nav-label">Completed</span><span class="nav-count" id="count-done">0</span></div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-label">Clients</div>
       <div id="client-list"></div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-label">Source Document</div>
-      <div id="doc-display">
-        <div class="doc-card">
-          <div class="doc-card-label">Current report</div>
-          <div class="doc-card-name" id="doc-name">Delta CU Status Report</div>
-          <div class="doc-card-meta" id="doc-meta">v6.1.2026 · uploaded today</div>
-        </div>
+      <div class="doc-card">
+        <div class="doc-card-label">Current report</div>
+        <div class="doc-card-name" id="doc-name">Delta CU Status Report</div>
+        <div class="doc-card-meta" id="doc-meta">v6.1.2026 · uploaded today</div>
       </div>
       <button class="doc-upload-btn" onclick="openModal('upload-modal')">↑ Upload new report</button>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-label">Actions</div>
       <div class="nav-item" onclick="exportCSV()"><span class="nav-label">↓ Export tasks</span></div>
@@ -225,11 +268,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 
   <div class="main">
     <div class="view-tabs">
-      <button class="view-tab active" id="tab-timeline" onclick="setViewTab('timeline')">By Date</button>
-      <button class="view-tab" id="tab-jobs" onclick="setViewTab('jobs')">By Job</button>
+      <button class="view-tab active" id="tab-timeline" onclick="setVT('timeline')">By Date</button>
+      <button class="view-tab" id="tab-jobs" onclick="setVT('jobs')">By Job</button>
     </div>
     <div class="stats" id="stats-row"></div>
     <div id="task-container"></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-overlay" id="edit-overlay">
+  <div class="edit-modal">
+    <div class="edit-title">Edit task</div>
+    <div class="edit-group"><label class="edit-label">Task name</label><input class="edit-input" id="edit-name" /></div>
+    <div class="edit-group"><label class="edit-label">Due date</label><input class="edit-input" type="date" id="edit-due" /></div>
+    <div class="edit-group"><label class="edit-label">End date (if range)</label><input class="edit-input" type="date" id="edit-due-end" /></div>
+    <div class="edit-group"><label class="edit-label">Deliverable type</label>
+      <select class="edit-input" id="edit-type">
+        <option>EM</option><option>DM</option><option>Banners</option><option>Posters</option>
+        <option>FWUP EM</option><option>FWUP DM</option><option>Branch Video</option><option>Form</option><option>Other</option>
+      </select>
+    </div>
+    <div class="edit-actions">
+      <button class="btn" onclick="closeEdit()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+    </div>
   </div>
 </div>
 
@@ -244,7 +307,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
     </div>
     <div class="form-group"><label class="form-label">Job name</label><input class="form-input" id="f-jobname" placeholder="e.g. Summer RAF"/></div>
     <div class="form-group"><label class="form-label">Task</label><input class="form-input" id="f-task" placeholder="e.g. R2: Creative out"/></div>
-    <div class="form-group"><label class="form-label">Notes / ask from email</label><textarea class="form-textarea" id="f-ask" placeholder="Paste the ask from the email..."></textarea></div>
+    <div class="form-group"><label class="form-label">Notes / ask from email</label><textarea class="form-textarea" id="f-ask" placeholder="Paste the ask..."></textarea></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Due date</label><input class="form-input" type="date" id="f-due"/></div>
       <div class="form-group"><label class="form-label">Deliverable type</label>
@@ -266,7 +329,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
   <div class="modal">
     <div class="modal-title">Upload status report CSV</div>
     <div class="modal-sub">Export your status report to CSV, then upload here</div>
-    <div class="notice">Required columns: <strong>client, campaign, task, type, due</strong> — Optional: <strong>vendor, dueEnd, version, reportdate</strong></div>
+    <div class="notice">Required: <strong>client, campaign, task, type, due</strong> — Optional: <strong>vendor, dueEnd, version</strong></div>
     <div class="upload-area" onclick="document.getElementById('csv-input').click()">
       <div style="font-size:22px;margin-bottom:6px">⬆</div>
       <div>Click to select CSV file</div>
@@ -279,14 +342,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 </div>
 
 <script>
-const SK='gain_snap_v5',DK='gain_done_v5',TK='gain_theme',DOCK='gain_doc_v1';
+const SK='gain_v6',DK='gain_done_v6',TK='gain_theme',DOCK='gain_doc',FK='gain_focus_v2',OK='gain_order_v2';
 
 const TASK_MAP={
   'r1 - creative to dc':'R1: Creative out','r1 – creative to dc':'R1: Creative out',
   'r1 – creative presentation':'R1: Creative out','r1 – send story boards to dc':'R1: Creative out',
   'r1 – send creative to dc':'R1: Creative out','r1 - send creative to dc':'R1: Creative out',
-  'creative revisions due to gain':'R1: Revisions in','revisions due to gain':'R1: Revisions in',
   'concept selection / creative revisions due to gain':'R1: Revisions in',
+  'creative revisions due to gain':'R1: Revisions in','revisions due to gain':'R1: Revisions in',
   'r2 - revised creative to dc':'R2: Creative out','r2 – revised creative to dc':'R2: Creative out',
   'creative revisions due to gain (r3)':'R2: Revisions in','revisions due to gain (r3)':'R2: Revisions in',
   'r3 - revised creative to dc':'R3: Creative out','r3 – revised creative to dc':'R3: Creative out',
@@ -302,6 +365,9 @@ const TASK_MAP={
   'creative to ken for production':'Creative to Dev',
   'send video link to dc':'Video out','make any last updates/dc final sign-off':'Video Approval',
   'email blast':'Email Blast',
+  'data qc report to dc':'Data QC to DC','approved dp instructions':'DP Instructions Approved',
+  'dp instructions to dc to review':'DP Instructions to DC','mail file due to gain':'Mail File to Gain',
+  'mail file due to lettershop':'Mail File to Lettershop',
 };
 const VM={'wallace graphics':'Wallace','drummond':'Drummond','salem one':'Salem','ip comm':'IP Comm','nahan':'Nahan'};
 
@@ -315,133 +381,213 @@ function xlate(raw,vendor){
   return raw;
 }
 function fmtC(raw){return(raw||'').replace(/\s*\/\/\s*/g,' ').trim();}
+function taskDisplay(name){
+  if((name||'').toLowerCase().includes('creative presentation'))return'⭐ '+name;
+  return name;
+}
 
 const SEED=[
+  // DC26077 Summer RAF
   {id:'s1',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'HTML to Cassie',type:'EM',due:'2026-05-26',vendor:'Wallace Graphics',source:'report'},
   {id:'s2',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Creative assets to DC',type:'EM',due:'2026-05-28',vendor:'Wallace Graphics',source:'report'},
   {id:'s3',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Email blast',type:'EM',due:'2026-06-04',vendor:'Wallace Graphics',source:'report'},
   {id:'s4',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Email blast',type:'FWUP EM',due:'2026-07-07',vendor:'Wallace Graphics',source:'report'},
-  {id:'s5',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Upload file for DC',type:'Branch Video',due:'2026-05-29',vendor:'Wallace Graphics',source:'report'},
+  // DC26063 Visa Multi Offer - DM
+  {id:'s5a',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Upload file for DC',type:'Branch Video',due:'2026-05-29',vendor:'Wallace Graphics',source:'report'},
+  // DC26063 FWUP EM
   {id:'s6',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'R3 - Revised creative to DC',type:'FWUP EM',due:'2026-05-28',vendor:'Wallace Graphics',source:'report'},
+  {id:'s6b',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative revisions due to Gain',type:'FWUP EM',due:'2026-05-27',vendor:'Wallace Graphics',source:'report'},
   {id:'s7',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'HTML Coding',type:'FWUP EM',due:'2026-06-03',dueEnd:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
   {id:'s8',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'HTML to Cassie',type:'FWUP EM',due:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
   {id:'s9',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative assets to DC',type:'FWUP EM',due:'2026-06-10',vendor:'Wallace Graphics',source:'report'},
   {id:'s10',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Email blast',type:'FWUP EM',due:'2026-06-23',vendor:'Wallace Graphics',source:'report'},
+  // DC26063 FWUP DM
   {id:'s11',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'R3 - Revised creative to DC',type:'FWUP DM',due:'2026-06-01',vendor:'Wallace Graphics',source:'report'},
+  {id:'s11b',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative revisions due to Gain',type:'FWUP DM',due:'2026-05-29',vendor:'Wallace Graphics',source:'report'},
   {id:'s12',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Art releases to printer',type:'FWUP DM',due:'2026-06-08',vendor:'Wallace Graphics',source:'report'},
   {id:'s13',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative assets to DC',type:'FWUP DM',due:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
+  // DC26063 EM
   {id:'s14',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Email blast',type:'EM',due:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
+  // DC26032 DCRIS Q2
   {id:'s15',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'HTML Coding',type:'EM',due:'2026-05-29',dueEnd:'2026-06-04',source:'report'},
   {id:'s16',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'HTML to Cassie',type:'EM',due:'2026-06-04',source:'report'},
   {id:'s17',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'Creative assets to DC',type:'EM',due:'2026-06-05',source:'report'},
   {id:'s18',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q2',task:'Email blast',type:'EM',due:'2026-06-17',source:'report'},
+  // DC26207 Summer Auto Recapture - EM
   {id:'s19',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML Coding',type:'EM',due:'2026-05-27',dueEnd:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
+  {id:'s19b',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative revisions due to Gain',type:'EM',due:'2026-05-19',vendor:'Wallace Graphics',source:'report'},
   {id:'s20',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML to Cassie',type:'EM',due:'2026-06-02',vendor:'Wallace Graphics',source:'report'},
   {id:'s21',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative assets to DC',type:'EM',due:'2026-06-03',vendor:'Wallace Graphics',source:'report'},
   {id:'s22',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Email blast',type:'EM',due:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
+  // DC26207 FWUP EM
   {id:'s23',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R1 - Creative to DC',type:'FWUP EM',due:'2026-06-04',vendor:'Wallace Graphics',source:'report'},
+  {id:'s23b',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative revisions due to Gain',type:'FWUP EM',due:'2026-06-11',vendor:'Wallace Graphics',source:'report'},
   {id:'s24',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML Coding',type:'FWUP EM',due:'2026-06-01',dueEnd:'2026-06-05',vendor:'Wallace Graphics',source:'report'},
   {id:'s25',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML to Cassie',type:'FWUP EM',due:'2026-06-05',vendor:'Wallace Graphics',source:'report'},
   {id:'s26',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative assets to DC',type:'FWUP EM',due:'2026-06-08',vendor:'Wallace Graphics',source:'report'},
   {id:'s27',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R2 - Revised creative to DC',type:'FWUP EM',due:'2026-06-12',vendor:'Wallace Graphics',source:'report'},
+  {id:'s27b',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative revisions due to Gain (R3)',type:'FWUP EM',due:'2026-06-18',vendor:'Wallace Graphics',source:'report'},
   {id:'s28',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R3 - Revised creative to DC',type:'FWUP EM',due:'2026-06-19',vendor:'Wallace Graphics',source:'report'},
   {id:'s29',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Email blast',type:'FWUP EM',due:'2026-07-14',vendor:'Wallace Graphics',source:'report'},
+  // DC26080 Interest Checking
   {id:'s30',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative Presentation',type:'DM',due:'2026-06-04',source:'report'},
+  {id:'s30b',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative revisions due to Gain',type:'DM',due:'2026-06-11',source:'report'},
   {id:'s31',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'R2 - Revised creative to DC',type:'DM',due:'2026-06-12',source:'report'},
+  {id:'s31b',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative revisions due to Gain (R3)',type:'DM',due:'2026-06-22',source:'report'},
   {id:'s32',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'R3 - Revised creative to DC',type:'DM',due:'2026-06-23',source:'report'},
   {id:'s33',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Art releases to printer',type:'DM',due:'2026-07-01',source:'report'},
   {id:'s34',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative assets to DC',type:'DM',due:'2026-07-02',source:'report'},
+  // DC26213 MIA Email Refresh
   {id:'s35',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R1 - Creative to DC',type:'EM',due:'2026-06-01',source:'report'},
+  {id:'s35b',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative revisions due to Gain',type:'EM',due:'2026-06-08',source:'report'},
   {id:'s36',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-09',source:'report'},
+  {id:'s36b',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-06-16',source:'report'},
   {id:'s37',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R3 - Revised creative to DC',type:'EM',due:'2026-06-17',source:'report'},
+  {id:'s37b',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative approval & links due to Gain',type:'EM',due:'2026-06-29',source:'report'},
   {id:'s38',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'HTML Coding',type:'EM',due:'2026-06-30',dueEnd:'2026-07-08',source:'report'},
   {id:'s39',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'HTML to Cassie',type:'EM',due:'2026-07-08',source:'report'},
   {id:'s40',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative assets to DC',type:'EM',due:'2026-07-09',source:'report'},
   {id:'s41',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Email blast',type:'EM',due:'2026-07-16',source:'report'},
+  // DC26030 Information Security Q3
   {id:'s42',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-06-22',source:'report'},
+  {id:'s42b',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Creative revisions due to Gain',type:'EM',due:'2026-06-26',source:'report'},
   {id:'s43',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-29',source:'report'},
+  {id:'s43b',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-07-07',source:'report'},
   {id:'s44',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-07-08',source:'report'},
+  {id:'s44b',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Creative approval & links due to Gain',type:'EM',due:'2026-07-13',source:'report'},
   {id:'s45',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'HTML Coding',type:'EM',due:'2026-07-14',dueEnd:'2026-07-20',source:'report'},
   {id:'s46',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-20',source:'report'},
   {id:'s47',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-21',source:'report'},
   {id:'s48',c:'Delta Community CU',campaign:'DC26030 // Information Security Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'report'},
+  // DC26035 Youth Engagement Q3
   {id:'s49',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative start-up',type:'EM',due:'2026-06-03',source:'report'},
   {id:'s50',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-06-16',source:'report'},
+  {id:'s50b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative revisions due to Gain',type:'EM',due:'2026-06-22',source:'report'},
   {id:'s51',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-06-23',source:'report'},
+  {id:'s51b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-06-30',source:'report'},
   {id:'s52',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-07-01',source:'report'},
+  {id:'s52b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative approval & links due to Gain',type:'EM',due:'2026-07-10',source:'report'},
   {id:'s53',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'HTML Coding',type:'EM',due:'2026-07-13',dueEnd:'2026-07-20',source:'report'},
   {id:'s54',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-21',source:'report'},
   {id:'s55',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-22',source:'report'},
   {id:'s56',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'report'},
   {id:'s57',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R1 - Creative to DC',type:'Form',due:'2026-06-25',source:'report'},
+  {id:'s57b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative revisions due to Gain',type:'Form',due:'2026-07-01',source:'report'},
   {id:'s58',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R2 - Revised creative to DC',type:'Form',due:'2026-07-02',source:'report'},
+  {id:'s58b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative revisions due to Gain (R3)',type:'Form',due:'2026-07-09',source:'report'},
   {id:'s59',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R3 - Revised creative to DC',type:'Form',due:'2026-07-10',source:'report'},
+  {id:'s59b',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative approval due to Gain',type:'Form',due:'2026-07-20',source:'report'},
   {id:'s60',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative assets to DC',type:'Form',due:'2026-07-21',source:'report'},
+  // DC26203 Fall Personal Loan - DM
   {id:'s61',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Creative to DC',type:'DM',due:'2026-06-09',vendor:'Wallace Graphics',source:'report'},
+  {id:'s61b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain',type:'DM',due:'2026-06-15',vendor:'Wallace Graphics',source:'report'},
   {id:'s62',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'DM',due:'2026-06-16',vendor:'Wallace Graphics',source:'report'},
+  {id:'s62b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain (R3)',type:'DM',due:'2026-06-23',vendor:'Wallace Graphics',source:'report'},
   {id:'s63',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 - Revised creative to DC',type:'DM',due:'2026-06-24',vendor:'Wallace Graphics',source:'report'},
+  {id:'s63b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval due to Gain',type:'DM',due:'2026-07-01',vendor:'Wallace Graphics',source:'report'},
   {id:'s64',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Art releases to printer',type:'DM',due:'2026-07-02',vendor:'Wallace Graphics',source:'report'},
   {id:'s65',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'DM',due:'2026-07-07',vendor:'Wallace Graphics',source:'report'},
+  // DC26203 Posters
   {id:'s66',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Creative to DC',type:'Posters',due:'2026-06-18',vendor:'Wallace Graphics',source:'report'},
+  {id:'s66b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Revisions due to Gain',type:'Posters',due:'2026-06-24',vendor:'Wallace Graphics',source:'report'},
   {id:'s67',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'Posters',due:'2026-06-25',vendor:'Wallace Graphics',source:'report'},
+  {id:'s67b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Revisions due to Gain (R3)',type:'Posters',due:'2026-07-01',vendor:'Wallace Graphics',source:'report'},
   {id:'s68',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 - Revised creative to DC',type:'Posters',due:'2026-07-02',vendor:'Wallace Graphics',source:'report'},
+  {id:'s68b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval due to Gain',type:'Posters',due:'2026-07-09',vendor:'Wallace Graphics',source:'report'},
   {id:'s69',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'Posters',due:'2026-07-13',vendor:'Wallace Graphics',source:'report'},
+  // DC26203 EM
   {id:'s70',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Creative to DC',type:'EM',due:'2026-06-29',vendor:'Wallace Graphics',source:'report'},
+  {id:'s70b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain',type:'EM',due:'2026-07-07',vendor:'Wallace Graphics',source:'report'},
   {id:'s71',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-08',vendor:'Wallace Graphics',source:'report'},
+  {id:'s71b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-07-14',vendor:'Wallace Graphics',source:'report'},
   {id:'s72',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 - Revised creative to DC',type:'EM',due:'2026-07-15',vendor:'Wallace Graphics',source:'report'},
+  {id:'s72b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval & links due to Gain',type:'EM',due:'2026-07-21',vendor:'Wallace Graphics',source:'report'},
   {id:'s73',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML Coding',type:'EM',due:'2026-07-22',dueEnd:'2026-07-28',vendor:'Wallace Graphics',source:'report'},
   {id:'s74',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML to Cassie',type:'EM',due:'2026-07-28',vendor:'Wallace Graphics',source:'report'},
   {id:'s75',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'EM',due:'2026-07-29',vendor:'Wallace Graphics',source:'report'},
   {id:'s76',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Email blast',type:'EM',due:'2026-08-06',vendor:'Wallace Graphics',source:'report'},
+  // DC26203 Banners
   {id:'s77',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Creative to DC',type:'Banners',due:'2026-07-08',vendor:'Wallace Graphics',source:'report'},
+  {id:'s77b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain',type:'Banners',due:'2026-07-14',vendor:'Wallace Graphics',source:'report'},
   {id:'s78',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'Banners',due:'2026-07-15',vendor:'Wallace Graphics',source:'report'},
+  {id:'s78b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain (R3)',type:'Banners',due:'2026-07-22',vendor:'Wallace Graphics',source:'report'},
   {id:'s79',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 - Revised creative to DC',type:'Banners',due:'2026-07-23',vendor:'Wallace Graphics',source:'report'},
+  {id:'s79b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval due to Gain',type:'Banners',due:'2026-07-29',vendor:'Wallace Graphics',source:'report'},
   {id:'s80',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'Banners',due:'2026-07-30',vendor:'Wallace Graphics',source:'report'},
+  // DC26203 Branch Video
   {id:'s81',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Send story boards to DC',type:'Branch Video',due:'2026-07-01',vendor:'Wallace Graphics',source:'report'},
+  {id:'s81b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain',type:'Branch Video',due:'2026-07-09',vendor:'Wallace Graphics',source:'report'},
   {id:'s82',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'Branch Video',due:'2026-07-10',vendor:'Wallace Graphics',source:'report'},
+  {id:'s82b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval due to Gain',type:'Branch Video',due:'2026-07-17',vendor:'Wallace Graphics',source:'report'},
   {id:'s83',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative to Ken for production',type:'Branch Video',due:'2026-07-20',dueEnd:'2026-07-24',vendor:'Wallace Graphics',source:'report'},
   {id:'s84',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Upload file for DC',type:'Branch Video',due:'2026-07-29',vendor:'Wallace Graphics',source:'report'},
+  // DC26203 FWUP EM
   {id:'s85',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 - Creative to DC',type:'FWUP EM',due:'2026-07-13',vendor:'Wallace Graphics',source:'report'},
+  {id:'s85b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain',type:'FWUP EM',due:'2026-07-17',vendor:'Wallace Graphics',source:'report'},
   {id:'s86',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 - Revised creative to DC',type:'FWUP EM',due:'2026-07-20',vendor:'Wallace Graphics',source:'report'},
+  {id:'s86b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative revisions due to Gain (R3)',type:'FWUP EM',due:'2026-07-24',vendor:'Wallace Graphics',source:'report'},
   {id:'s87',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 - Revised creative to DC',type:'FWUP EM',due:'2026-07-27',vendor:'Wallace Graphics',source:'report'},
+  {id:'s87b',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative approval & links due to Gain',type:'FWUP EM',due:'2026-07-31',vendor:'Wallace Graphics',source:'report'},
   {id:'s88',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML Coding',type:'FWUP EM',due:'2026-08-03',dueEnd:'2026-08-07',vendor:'Wallace Graphics',source:'report'},
   {id:'s89',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML to Cassie',type:'FWUP EM',due:'2026-08-07',vendor:'Wallace Graphics',source:'report'},
   {id:'s90',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'FWUP EM',due:'2026-08-10',vendor:'Wallace Graphics',source:'report'},
   {id:'s91',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Email blast',type:'FWUP EM',due:'2026-08-18',vendor:'Wallace Graphics',source:'report'},
+  // DC26032 DCRIS Q3
   {id:'s92',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-07-15',source:'report'},
+  {id:'s92b',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Creative revisions due to Gain',type:'EM',due:'2026-07-24',source:'report'},
   {id:'s93',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-27',source:'report'},
+  {id:'s93b',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-07-31',source:'report'},
   {id:'s94',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-08-03',source:'report'},
+  {id:'s94b',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Creative approval & links due to Gain',type:'EM',due:'2026-08-07',source:'report'},
   {id:'s95',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'HTML Coding',type:'EM',due:'2026-08-10',dueEnd:'2026-08-14',source:'report'},
   {id:'s96',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-14',source:'report'},
   {id:'s97',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-17',source:'report'},
   {id:'s98',c:'Delta Community CU',campaign:'DC26032 // Discover DCRIS Q3',task:'Email blast',type:'EM',due:'2026-08-25',source:'report'},
+  // DC25225 Zelle Q3 EM
   {id:'s99',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R1 - Creative to DC',type:'EM',due:'2026-07-20',source:'report'},
+  {id:'s99b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative revisions due to Gain',type:'EM',due:'2026-07-27',source:'report'},
   {id:'s100',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R2 - Revised creative to DC',type:'EM',due:'2026-07-28',source:'report'},
+  {id:'s100b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative revisions due to Gain (R3)',type:'EM',due:'2026-08-04',source:'report'},
   {id:'s101',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 - Revised creative to DC',type:'EM',due:'2026-08-05',source:'report'},
+  {id:'s101b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative approval & links due to Gain',type:'EM',due:'2026-08-11',source:'report'},
   {id:'s102',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'HTML Coding',type:'EM',due:'2026-08-12',dueEnd:'2026-08-18',source:'report'},
   {id:'s103',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-18',source:'report'},
   {id:'s104',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-19',source:'report'},
   {id:'s105',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Email blast',type:'EM',due:'2026-08-27',source:'report'},
+  // DC25225 Banners
   {id:'s106',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R1 - Creative to DC',type:'Banners',due:'2026-08-10',source:'report'},
+  {id:'s106b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative revisions due to Gain',type:'Banners',due:'2026-08-14',source:'report'},
   {id:'s107',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R2 - Revised creative to DC',type:'Banners',due:'2026-08-17',source:'report'},
+  {id:'s107b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative revisions due to Gain (R3)',type:'Banners',due:'2026-08-21',source:'report'},
   {id:'s108',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 - Revised creative to DC',type:'Banners',due:'2026-08-24',source:'report'},
+  {id:'s108b',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative approval due to Gain',type:'Banners',due:'2026-08-27',source:'report'},
   {id:'s109',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative assets to DC',type:'Banners',due:'2026-08-28',source:'report'},
 ];
 SEED.forEach(t=>{t.task=xlate(t.task,t.vendor||null);t.campaign=fmtC(t.campaign);});
 
-let tasks=[],done=new Set(),sv='all',cc=null,vt='timeline',dragSrc=null;
+let tasks=[],done=new Set(),sv='all',cc=null,vt='timeline';
+let focusOrder=[]; // array of task ids in user-defined order
+let manualPins=new Set(); // manually pinned task ids
+let focusCollapsed=false;
+let editingId=null;
+let dragSrcId=null,dragCtx=null; // ctx: 'main' or 'focus'
 let docInfo={name:'Delta CU Status Report',version:'6.1.2026',uploaded:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
 
 function load(){
   const s=localStorage.getItem(SK),d=localStorage.getItem(DK),dc=localStorage.getItem(DOCK);
+  const fo=localStorage.getItem(FK),mp=localStorage.getItem(OK);
   tasks=s?JSON.parse(s):SEED.map(t=>({...t}));
   done=d?new Set(JSON.parse(d)):new Set();
   if(dc)docInfo=JSON.parse(dc);
+  focusOrder=fo?JSON.parse(fo):[];
+  manualPins=mp?new Set(JSON.parse(mp)):new Set();
 }
 function save(){
   localStorage.setItem(SK,JSON.stringify(tasks));
   localStorage.setItem(DK,JSON.stringify([...done]));
   localStorage.setItem(DOCK,JSON.stringify(docInfo));
+  localStorage.setItem(FK,JSON.stringify(focusOrder));
+  localStorage.setItem(OK,JSON.stringify([...manualPins]));
 }
 
 function pd(s){if(!s)return null;const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
@@ -466,19 +612,98 @@ function getStatus(t){
 }
 function slabel(s){return{ov:'Overdue',today:'Today',tomorrow:'Tomorrow',week:'This week',next:'Next week',upcoming:'Upcoming',done:'Done'}[s]||s;}
 
+// FOCUS LIST LOGIC
+function getFocusTasks(){
+  const n=now();
+  const week=new Date(n);week.setDate(week.getDate()+7);
+  // Auto: due today OR creative presentation within 7 days
+  const autoIds=new Set();
+  tasks.forEach(t=>{
+    if(done.has(t.id))return;
+    const s=getStatus(t);
+    if(s==='today'||s==='ov')autoIds.add(t.id);
+    if(t.task.toLowerCase().includes('creative presentation')){
+      const d=pd(t.dueEnd||t.due);
+      if(d&&d<=week)autoIds.add(t.id);
+    }
+  });
+  // Merge: auto + manual pins, maintain focusOrder for order
+  const allIds=new Set([...autoIds,...manualPins]);
+  // Remove completed from focus
+  [...allIds].forEach(id=>{if(done.has(id))allIds.delete(id);});
+  // Build ordered list
+  const ordered=focusOrder.filter(id=>allIds.has(id));
+  const remaining=[...allIds].filter(id=>!ordered.includes(id));
+  // Sort remaining by due date
+  remaining.sort((a,b)=>{
+    const ta=tasks.find(t=>t.id===a),tb=tasks.find(t=>t.id===b);
+    if(!ta||!tb)return 0;
+    return pd(ta.dueEnd||ta.due)-pd(tb.dueEnd||tb.due);
+  });
+  const finalIds=[...ordered,...remaining];
+  return finalIds.map(id=>tasks.find(t=>t.id===id)).filter(Boolean);
+}
+
+function renderFocus(){
+  const ft=getFocusTasks();
+  const todayCt=ft.filter(t=>getStatus(t)==='today'||getStatus(t)==='ov').length;
+  const pill=document.getElementById('focus-today-pill');
+  const totalPill=document.getElementById('focus-total-pill');
+  if(todayCt>0){pill.style.display='';pill.textContent=`${todayCt} need attention`;}
+  else{pill.style.display='none';}
+  totalPill.textContent=`${ft.length} task${ft.length!==1?'s':''}`;
+
+  if(focusCollapsed){document.getElementById('focus-tasks').classList.add('hidden');document.getElementById('focus-collapse-btn').textContent='▼';return;}
+  document.getElementById('focus-tasks').classList.remove('hidden');
+  document.getElementById('focus-collapse-btn').textContent='▲';
+
+  if(!ft.length){document.getElementById('focus-tasks').innerHTML='<div style="font-size:11px;color:var(--text3);padding:4px 0 6px">Nothing urgent right now.</div>';return;}
+
+  document.getElementById('focus-tasks').innerHTML=ft.map(t=>{
+    const s=getStatus(t);
+    const isManual=manualPins.has(t.id)&&s!=='today'&&s!=='ov';
+    const displayName=taskDisplay(t.task);
+    const dateStr=t.dueEnd?`${fd(t.due,true)} – ${fd(t.dueEnd)}`:fd(t.due,true);
+    return `<div class="f-task s-${s}${done.has(t.id)?' done':''}" draggable="true" data-id="${t.id}" data-ctx="focus">
+      <div class="f-drag">⠿</div>
+      <input type="checkbox" class="f-check" ${done.has(t.id)?'checked':''} onchange="toggle('${t.id}')"/>
+      <div>
+        <div class="f-name">${displayName}</div>
+        <div class="f-meta">${t.campaign} · ${t.type}</div>
+      </div>
+      <div class="f-badge ${s}">${dateStr}</div>
+      <button class="f-remove" onclick="removeFromFocus('${t.id}')" title="Remove from focus">✕</button>
+    </div>`;
+  }).join('');
+  attachFocusDrag();
+}
+
+function toggleFocus(){
+  focusCollapsed=!focusCollapsed;
+  renderFocus();
+}
+function removeFromFocus(id){
+  manualPins.delete(id);
+  focusOrder=focusOrder.filter(i=>i!==id);
+  save();render();
+}
+function pinToFocus(id){
+  manualPins.add(id);
+  save();render();
+}
+
 function render(){
   const t=now();
   document.getElementById('live-date').textContent=t.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
-
   const counts={ov:0,today:0,tomorrow:0,week:0,next:0,upcoming:0,done:0};
   tasks.forEach(t=>{const s=getStatus(t);counts[s]=(counts[s]||0)+1;});
 
   document.getElementById('stats-row').innerHTML=`
     <div class="stat"><div class="stat-label">Overdue</div><div class="stat-num red">${counts.ov}</div></div>
-    <div class="stat"><div class="stat-label">Today</div><div class="stat-num amber">${counts.today}</div></div>
-    <div class="stat"><div class="stat-label">Tomorrow</div><div class="stat-num purple">${counts.tomorrow}</div></div>
+    <div class="stat"><div class="stat-label">Today</div><div class="stat-num green">${counts.today}</div></div>
+    <div class="stat"><div class="stat-label">Tomorrow</div><div class="stat-num" style="color:var(--text2)">${counts.tomorrow}</div></div>
     <div class="stat"><div class="stat-label">This week</div><div class="stat-num blue">${counts.week}</div></div>
-    <div class="stat"><div class="stat-label">Completed</div><div class="stat-num green">${counts.done}</div></div>
+    <div class="stat"><div class="stat-label">Completed</div><div class="stat-num muted">${counts.done}</div></div>
   `;
 
   document.getElementById('count-all').textContent=tasks.filter(t=>getStatus(t)!=='done').length;
@@ -499,6 +724,7 @@ function render(){
   document.getElementById('doc-name').textContent=docInfo.name;
   document.getElementById('doc-meta').textContent=`v${docInfo.version} · ${docInfo.uploaded}`;
 
+  renderFocus();
   vt==='timeline'?renderTimeline(counts):renderJobs();
 }
 
@@ -514,130 +740,120 @@ function renderTimeline(counts){
   });
   list.sort((a,b)=>pd(a.dueEnd||a.due)-pd(b.dueEnd||b.due));
 
+  const groups=[
+    {key:'ov',label:'Overdue',cls:'red'},
+    {key:'today',label:`Today — ${now().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`,cls:'green'},
+    {key:'tomorrow',label:'Tomorrow',cls:''},
+    {key:'week',label:'This week',cls:'blue'},
+    {key:'next',label:'Next week',cls:''},
+    {key:'upcoming',label:'Upcoming',cls:''},
+  ];
+  const showGroups=sv==='all'?groups:groups.filter(g=>{
+    if(sv==='week')return g.key==='week'||g.key==='tomorrow';
+    if(sv==='next')return g.key==='next'||g.key==='upcoming';
+    return g.key===sv;
+  });
+
   let html='';
-  if(!list.length&&sv!=='all'){html='<div class="empty">Nothing here.</div>';}
-  else{
-    const groups=[
-      {key:'ov',label:'Overdue',cls:'red'},
-      {key:'today',label:`Today — ${now().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`,cls:'amber'},
-      {key:'tomorrow',label:`Tomorrow`,cls:'purple'},
-      {key:'week',label:'This week',cls:'blue'},
-      {key:'next',label:'Next week',cls:''},
-      {key:'upcoming',label:'Upcoming',cls:''},
-    ];
-    const showGroups=sv==='all'?groups:groups.filter(g=>{
-      if(sv==='week')return g.key==='week'||g.key==='tomorrow';
-      if(sv==='next')return g.key==='next'||g.key==='upcoming';
-      return g.key===sv;
-    });
-    showGroups.forEach(g=>{
-      const gt=list.filter(t=>getStatus(t)===g.key);
-      if(!gt.length)return;
-      html+=`<div class="group-header ${g.cls}"><span>${g.label}</span><span style="font-weight:400">${gt.length} task${gt.length!==1?'s':''}</span></div>`;
-      html+=`<div class="task-list">${gt.map(tRow).join('')}</div>`;
-    });
-    const doneList=tasks.filter(t=>{if(cc&&t.c!==cc)return false;return getStatus(t)==='done';});
-    if(doneList.length&&(sv==='all'||sv==='done')){
-      html+=`<div class="group-header green" style="margin-top:8px"><span>Completed</span><span style="font-weight:400">${doneList.length} task${doneList.length!==1?'s':''}</span></div>`;
-      html+=`<div class="task-list">${doneList.map(tRow).join('')}</div>`;
-    }
+  showGroups.forEach(g=>{
+    const gt=list.filter(t=>getStatus(t)===g.key);
+    if(!gt.length)return;
+    html+=`<div class="group-header ${g.cls}"><span>${g.label}</span><span style="font-weight:400">${gt.length} task${gt.length!==1?'s':''}</span></div>`;
+    html+=`<div class="task-list">${gt.map(tRow).join('')}</div>`;
+  });
+
+  const doneList=tasks.filter(t=>{if(cc&&t.c!==cc)return false;return getStatus(t)==='done';});
+  if(doneList.length&&(sv==='all'||sv==='done')){
+    html+=`<div class="group-header green" style="margin-top:8px"><span>Completed</span><span style="font-weight:400">${doneList.length}</span></div>`;
+    html+=`<div class="task-list">${doneList.map(tRow).join('')}</div>`;
   }
   document.getElementById('task-container').innerHTML=html||'<div class="empty">Nothing here.</div>';
-  attachDrag();
+  attachMainDrag();
 }
 
 function tRow(t){
   const s=getStatus(t);
   const ds=t.dueEnd?`${fd(t.due,true)}<span class="rng">thru ${fd(t.dueEnd)}</span>`:fd(t.due,true);
-  return `<div class="task-row status-${s}${s==='done'?' done':''}" draggable="true" data-id="${t.id}">
+  const displayName=taskDisplay(t.task);
+  const isPinned=manualPins.has(t.id);
+  return `<div class="task-row s-${s}${s==='done'?' done':''}" draggable="true" data-id="${t.id}" data-ctx="main" ondblclick="openEdit('${t.id}')">
     <input type="checkbox" class="task-check" ${done.has(t.id)?'checked':''} onchange="toggle('${t.id}')"/>
     <div class="task-date">${ds}</div>
     <div class="type-badge">${t.type}</div>
-    <div><div class="task-name">${t.task}</div><div class="task-campaign">${t.campaign}</div></div>
+    <div>
+      <div class="task-name">${displayName}</div>
+      <div class="task-campaign">${t.campaign}</div>
+    </div>
     <div class="status-badge ${s}">${slabel(s)}</div>
   </div>`;
 }
 
 function renderJobs(){
-  let list=tasks.filter(t=>{
-    if(cc&&t.c!==cc)return false;
-    return true;
-  });
-
-  // Get unique campaigns sorted alphabetically by job number
+  let list=tasks.filter(t=>{if(cc&&t.c!==cc)return false;return true;});
   const camps=[...new Set(list.map(t=>t.campaign))].sort((a,b)=>a.localeCompare(b));
   if(!camps.length){document.getElementById('task-container').innerHTML='<div class="empty">Nothing here.</div>';return;}
-
-  // Build columns in groups of 3
   let html='<div class="board">';
   camps.forEach(camp=>{
-    const campTasks=list.filter(t=>t.campaign===camp);
-    const active=campTasks.filter(t=>getStatus(t)!=='done');
-    const doneT=campTasks.filter(t=>getStatus(t)==='done');
-    const statuses=active.map(t=>getStatus(t));
-    const hasOv=statuses.includes('ov'),hasToday=statuses.includes('today'),hasTom=statuses.includes('tomorrow'),hasWeek=statuses.includes('week');
-
+    const ct=list.filter(t=>t.campaign===camp);
+    const active=ct.filter(t=>getStatus(t)!=='done');
+    const doneT=ct.filter(t=>getStatus(t)==='done');
+    const sts=active.map(t=>getStatus(t));
+    const hasOv=sts.includes('ov'),hasToday=sts.includes('today'),hasWeek=sts.includes('week')||sts.includes('tomorrow');
     let badges='';
     if(hasOv)badges+=`<span class="job-badge red">Overdue</span>`;
-    if(hasToday)badges+=`<span class="job-badge amber">Due today</span>`;
-    if(hasTom)badges+=`<span class="job-badge" style="background:var(--purple-bg);color:var(--purple)">Tomorrow</span>`;
-    if(hasWeek&&!hasOv&&!hasToday&&!hasTom)badges+=`<span class="job-badge blue">This week</span>`;
-    if(doneT.length)badges+=`<span class="job-badge green">${doneT.length}/${campTasks.length} done</span>`;
+    if(hasToday)badges+=`<span class="job-badge green">Due today</span>`;
+    if(hasWeek&&!hasOv&&!hasToday)badges+=`<span class="job-badge blue">This week</span>`;
+    if(doneT.length)badges+=`<span class="job-badge" style="background:var(--green-bg);color:var(--green)">${doneT.length}/${ct.length} done</span>`;
     if(!badges)badges=`<span class="job-badge gray">${active.length} upcoming</span>`;
-
-    // Split campaign into number and name
     const parts=camp.split(' ');
-    const jobNum=parts[0];
-    const jobName=parts.slice(1).join(' ');
-
-    // Group by deliverable type, sort tasks within each group chronologically
-    const types=[...new Set(campTasks.map(t=>t.type))].sort();
+    const jobNum=parts[0],jobName=parts.slice(1).join(' ');
+    const types=[...new Set(ct.map(t=>t.type))].sort();
     let taskHtml='';
     types.forEach(type=>{
-      const typeTasks=campTasks.filter(t=>t.type===type).sort((a,b)=>pd(a.dueEnd||a.due)-pd(b.dueEnd||b.due));
+      const tt=ct.filter(t=>t.type===type).sort((a,b)=>pd(a.dueEnd||a.due)-pd(b.dueEnd||b.due));
       taskHtml+=`<div class="del-group"><div class="del-label">${type}</div>`;
-      typeTasks.forEach(t=>{
+      tt.forEach(t=>{
         const s=getStatus(t);
         const ds=t.dueEnd?`${fd(t.due,true)} – ${fd(t.dueEnd)}`:fd(t.due,true);
-        taskHtml+=`<div class="board-task${s==='done'?' done':''}">
+        const dn=taskDisplay(t.task);
+        taskHtml+=`<div class="board-task${s==='done'?' done':''}" ondblclick="openEdit('${t.id}')">
           <input type="checkbox" class="board-task-check" ${done.has(t.id)?'checked':''} onchange="toggle('${t.id}')"/>
-          <div class="board-task-body">
-            <div class="board-task-name">${t.task}</div>
-            <div class="board-task-date">${ds}</div>
-          </div>
+          <div class="board-task-body"><div class="board-task-name">${dn}</div><div class="board-task-date">${ds}</div></div>
           <div class="status-dot dot-${s}"></div>
         </div>`;
       });
       taskHtml+='</div>';
     });
-
-    html+=`<div class="job-col">
-      <div class="job-col-header">
-        <div class="job-col-num">${jobNum}</div>
-        <div class="job-col-name">${jobName}</div>
-        <div class="job-col-badges">${badges}</div>
-      </div>
-      ${taskHtml}
-    </div>`;
+    html+=`<div class="job-col"><div class="job-col-header"><div class="job-col-num">${jobNum}</div><div class="job-col-name">${jobName}</div><div class="job-col-badges">${badges}</div></div>${taskHtml}</div>`;
   });
   html+='</div>';
   document.getElementById('task-container').innerHTML=html;
 }
 
-function toggle(id){done.has(id)?done.delete(id):done.add(id);save();render();}
+// EDIT
+function openEdit(id){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  editingId=id;
+  document.getElementById('edit-name').value=t.task;
+  document.getElementById('edit-due').value=t.due;
+  document.getElementById('edit-due-end').value=t.dueEnd||'';
+  document.getElementById('edit-type').value=t.type;
+  document.getElementById('edit-overlay').classList.add('open');
+}
+function closeEdit(){document.getElementById('edit-overlay').classList.remove('open');editingId=null;}
+function saveEdit(){
+  const t=tasks.find(t=>t.id===editingId);if(!t)return;
+  t.task=document.getElementById('edit-name').value.trim()||t.task;
+  t.due=document.getElementById('edit-due').value||t.due;
+  t.dueEnd=document.getElementById('edit-due-end').value||null;
+  t.type=document.getElementById('edit-type').value;
+  save();closeEdit();render();
+}
+document.getElementById('edit-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('edit-overlay'))closeEdit();});
 
-function setSidebarView(v,el){
-  sv=v;cc=null;
-  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-  if(el)el.classList.add('active');
-  render();
-}
-function setViewTab(v){
-  vt=v;
-  document.getElementById('tab-timeline').classList.toggle('active',v==='timeline');
-  document.getElementById('tab-jobs').classList.toggle('active',v==='jobs');
-  render();
-}
+function toggle(id){done.has(id)?done.delete(id):done.add(id);save();render();}
+function setSV(v,el){sv=v;cc=null;document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));if(el)el.classList.add('active');render();}
+function setVT(v){vt=v;document.getElementById('tab-timeline').classList.toggle('active',v==='timeline');document.getElementById('tab-jobs').classList.toggle('active',v==='jobs');render();}
 function setClient(c){cc=c;sv='all';document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));document.getElementById('nav-all').classList.add('active');render();}
 
 function addTask(){
@@ -673,18 +889,12 @@ function handleCSV(e){
       tasks.push({id,c:row.client||'Imported',campaign:camp,task:translated,type:row.type||'Other',due:row.due,dueEnd:row.dueend||null,vendor:row.vendor||null,source:'report'});
       imported++;
     }
-    // Update doc info from CSV metadata if present
-    const hIdx=lines[0].split(',').map(h=>h.trim().toLowerCase().replace(/"/g,''));
-    if(hIdx.includes('reportdate')||hIdx.includes('version')){
-      const firstRow=lines[1]?lines[1].split(',').map(v=>v.trim().replace(/"/g,'')):[];
-      const rdi=hIdx.indexOf('reportdate'),vi=hIdx.indexOf('version');
-      if(rdi>-1&&firstRow[rdi])docInfo.version=firstRow[rdi];
-      docInfo.name=file.name.replace('.csv','');
-      docInfo.uploaded=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    } else {
-      docInfo.name=file.name.replace('.csv','');
-      docInfo.uploaded=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }
+    const hi=lines[0].split(',').map(h=>h.trim().toLowerCase().replace(/"/g,''));
+    const rdi=hi.indexOf('reportdate'),vi=hi.indexOf('version');
+    const fr=lines[1]?lines[1].split(',').map(v=>v.trim().replace(/"/g,'')):[];
+    if(vi>-1&&fr[vi])docInfo.version=fr[vi];
+    docInfo.name=file.name.replace(/\.csv$/i,'');
+    docInfo.uploaded=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     save();render();
     document.getElementById('upload-status').textContent=`✓ Imported ${imported} new task${imported!==1?'s':''}.`;
   };
@@ -696,20 +906,71 @@ function exportCSV(){
   const blob=new Blob([['client,campaign,task,type,due,dueEnd,vendor,source,done',...rows].join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gain_snapshot.csv';a.click();
 }
+function clearCompleted(){if(!confirm('Clear all completed tasks?'))return;tasks=tasks.filter(t=>!done.has(t.id));done.clear();save();render();}
 
-function clearCompleted(){
-  if(!confirm('Clear all completed tasks?'))return;
-  tasks=tasks.filter(t=>!done.has(t.id));done.clear();save();render();
-}
-
-function attachDrag(){
+// DRAG — MAIN LIST (persists order)
+function attachMainDrag(){
   document.querySelectorAll('.task-row[draggable]').forEach(row=>{
-    row.addEventListener('dragstart',e=>{dragSrc=e.currentTarget.dataset.id;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    row.addEventListener('dragover',e=>{e.preventDefault();document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('drag-over'));e.currentTarget.classList.add('drag-over');});
-    row.addEventListener('drop',e=>{e.preventDefault();const tid=e.currentTarget.dataset.id;if(dragSrc===tid)return;const si=tasks.findIndex(t=>t.id===dragSrc),ti=tasks.findIndex(t=>t.id===tid);const[m]=tasks.splice(si,1);tasks.splice(ti,0,m);save();render();});
-    row.addEventListener('dragend',()=>{document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('dragging','drag-over'));});
+    row.addEventListener('dragstart',e=>{
+      dragSrcId=e.currentTarget.dataset.id;dragCtx='main';
+      e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';
+    });
+    row.addEventListener('dragover',e=>{
+      e.preventDefault();
+      document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('drag-over'));
+      e.currentTarget.classList.add('drag-over');
+    });
+    row.addEventListener('drop',e=>{
+      e.preventDefault();
+      const tid=e.currentTarget.dataset.id;
+      if(dragCtx==='main'&&dragSrcId!==tid){
+        const si=tasks.findIndex(t=>t.id===dragSrcId),ti=tasks.findIndex(t=>t.id===tid);
+        const[m]=tasks.splice(si,1);tasks.splice(ti,0,m);save();render();
+      } else if(dragCtx==='focus'){
+        // Dragging from focus to main — just remove from focus
+        removeFromFocus(dragSrcId);
+      }
+    });
+    row.addEventListener('dragend',()=>{document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrcId=null;dragCtx=null;});
   });
 }
+
+// DRAG — FOCUS LIST (persists order)
+function attachFocusDrag(){
+  document.querySelectorAll('.f-task[draggable]').forEach(row=>{
+    row.addEventListener('dragstart',e=>{
+      dragSrcId=e.currentTarget.dataset.id;dragCtx='focus';
+      e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';
+    });
+    row.addEventListener('dragover',e=>{
+      e.preventDefault();
+      document.querySelectorAll('.f-task').forEach(r=>r.classList.remove('drag-over'));
+      e.currentTarget.classList.add('drag-over');
+    });
+    row.addEventListener('drop',e=>{
+      e.preventDefault();
+      const tid=e.currentTarget.dataset.id;
+      if(dragSrcId===tid)return;
+      const ft=getFocusTasks().map(t=>t.id);
+      const si=ft.indexOf(dragSrcId),ti=ft.indexOf(tid);
+      if(si<0||ti<0)return;
+      ft.splice(si,1);ft.splice(ti,0,dragSrcId);
+      // Rebuild focusOrder to reflect new order
+      focusOrder=ft;
+      // Ensure dragged item is pinned so it stays
+      manualPins.add(dragSrcId);
+      save();renderFocus();
+    });
+    row.addEventListener('dragend',()=>{document.querySelectorAll('.f-task').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrcId=null;dragCtx=null;});
+  });
+}
+
+// Drop zone on focus bar for dragging FROM main list TO focus
+document.getElementById('focus-tasks').addEventListener('dragover',e=>{e.preventDefault();});
+document.getElementById('focus-tasks').addEventListener('drop',e=>{
+  e.preventDefault();
+  if(dragCtx==='main'&&dragSrcId){pinToFocus(dragSrcId);}
+});
 
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -718,8 +979,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('clic
 function toggleTheme(){
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
   const next=dark?'light':'dark';
-  document.documentElement.setAttribute('data-theme',next);
-  localStorage.setItem(TK,next);
+  document.documentElement.setAttribute('data-theme',next);localStorage.setItem(TK,next);
   document.getElementById('theme-btn').textContent=next==='dark'?'☀︎':'☾';
 }
 function initTheme(){
