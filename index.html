@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gain // Creative Tracker</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222222;
+    --border: #2e2e2e;
+    --border2: #3a3a3a;
+    --text: #f0f0f0;
+    --text2: #999;
+    --text3: #555;
+    --accent: #c8f04a;
+    --red: #ff4d4d;
+    --red-bg: #1f1010;
+    --amber: #f5a623;
+    --amber-bg: #1f1700;
+    --blue: #4a9eff;
+    --blue-bg: #0d1a2e;
+    --green: #4ade80;
+    --green-bg: #0a1f0f;
+    --radius: 8px;
+    --radius-sm: 5px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .date-badge {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: .05em;
+  }
+  .btn {
+    font-family: inherit;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    letter-spacing: .05em;
+    transition: all .15s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #d4f55a; border-color: #d4f55a; color: #000; }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    position: sticky;
+    top: 52px;
+    height: calc(100vh - 52px);
+    overflow-y: auto;
+  }
+  .sidebar-section {
+    padding: 0 16px;
+    margin-bottom: 24px;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 12px;
+    transition: all .12s;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--surface2); color: var(--accent); border-color: var(--border); }
+  .nav-count {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--surface2);
+    color: var(--text3);
+  }
+  .nav-count.red { background: var(--red-bg); color: var(--red); }
+  .nav-count.amber { background: var(--amber-bg); color: var(--amber); }
+  .nav-count.blue { background: var(--blue-bg); color: var(--blue); }
+
+  /* MAIN */
+  .main {
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  /* STATS ROW */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .stat-num { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+  .stat-num.red { color: var(--red); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-num.blue { color: var(--blue); }
+  .stat-num.green { color: var(--green); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  /* TASK LIST */
+  .task-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 32px; }
+
+  .task-row {
+    display: grid;
+    grid-template-columns: 24px 90px 1fr 70px 80px 90px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color .12s;
+    border-left: 3px solid transparent;
+  }
+  .task-row:hover { border-color: var(--border2); }
+  .task-row.done { opacity: .4; }
+  .task-row.done .task-name { text-decoration: line-through; }
+  .task-row.status-ov { border-left-color: var(--red); }
+  .task-row.status-today { border-left-color: var(--amber); }
+  .task-row.status-soon { border-left-color: var(--blue); }
+  .task-row.status-upcoming { border-left-color: var(--border); }
+
+  .task-check {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .12s;
+  }
+  .task-check:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .task-check:checked::after {
+    content: '✓';
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .task-date { font-size: 11px; color: var(--text2); white-space: nowrap; }
+  .task-date .range { font-size: 10px; color: var(--text3); display: block; }
+  .task-name { font-size: 12px; color: var(--text); }
+  .task-campaign { font-size: 10px; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .type-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: var(--surface2);
+    color: var(--text3);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  .status-badge.ov { background: var(--red-bg); color: var(--red); }
+  .status-badge.today { background: var(--amber-bg); color: var(--amber); }
+  .status-badge.soon { background: var(--blue-bg); color: var(--blue); }
+  .status-badge.upcoming { background: var(--surface2); color: var(--text3); }
+  .status-badge.done { background: var(--green-bg); color: var(--green); }
+
+  .source-badge {
+    font-size: 10px;
+    color: var(--text3);
+    text-align: right;
+  }
+
+  /* EMPTY STATE */
+  .empty { padding: 40px; text-align: center; color: var(--text3); font-size: 12px; }
+
+  /* GROUP HEADER */
+  .group-header {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 16px 0 6px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .group-header:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 480px;
+    max-width: 95vw;
+  }
+  .modal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: .05em;
+  }
+  .modal-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 20px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 5px;
+    display: block;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color .12s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-textarea { resize: vertical; min-height: 70px; }
+  .form-select option { background: var(--surface2); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+  /* UPLOAD AREA */
+  .upload-area {
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+    color: var(--text3);
+    font-size: 12px;
+  }
+  .upload-area:hover { border-color: var(--accent); color: var(--accent); }
+  .upload-icon { font-size: 24px; margin-bottom: 8px; }
+
+  /* DRAG HANDLE */
+  .drag-handle {
+    cursor: grab;
+    color: var(--text3);
+    font-size: 14px;
+    user-select: none;
+  }
+  .drag-handle:active { cursor: grabbing; }
+
+  .dragging { opacity: .5; }
+  .drag-over { border-color: var(--accent) !important; }
+
+  /* PRIORITY BADGE */
+  .priority-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+  }
+  .priority-dot.high { background: var(--red); }
+  .priority-dot.medium { background: var(--amber); }
+  .priority-dot.low { background: var(--text3); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 2px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px; width: fit-content; }
+  .tab { font-family: inherit; font-size: 11px; padding: 5px 14px; border-radius: 4px; border: none; background: transparent; color: var(--text2); cursor: pointer; letter-spacing: .04em; transition: all .12s; }
+  .tab.active { background: var(--surface2); color: var(--accent); }
+
+  /* NOTICE */
+  .notice {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .task-row { grid-template-columns: 24px 1fr 80px; }
+    .task-date, .type-badge, .source-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">Gain // Creative Tracker</div>
+  <div class="topbar-right">
+    <span class="date-badge" id="live-date"></span>
+    <button class="btn" onclick="openModal('upload-modal')">↑ Upload CSV</button>
+    <button class="btn btn-primary" onclick="openModal('add-modal')">+ Add Task</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Views</div>
+      <div class="nav-item active" onclick="setView('all', this)">
+        All tasks <span class="nav-count" id="count-all">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('overdue', this)">
+        Overdue <span class="nav-count red" id="count-ov">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('today', this)">
+        Today <span class="nav-count amber" id="count-today">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('soon', this)">
+        Next 7 days <span class="nav-count blue" id="count-soon">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('upcoming', this)">
+        Upcoming <span class="nav-count" id="count-upcoming">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('done', this)">
+        Completed <span class="nav-count" id="count-done">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Clients</div>
+      <div id="client-list"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Actions</div>
+      <div class="nav-item" onclick="openModal('upload-modal')">↑ Upload new CSV</div>
+      <div class="nav-item" onclick="exportCSV()">↓ Export tasks</div>
+      <div class="nav-item" onclick="clearCompleted()">✕ Clear completed</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="main-content">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Overdue</div>
+        <div class="stat-num red" id="stat-ov">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Today</div>
+        <div class="stat-num amber" id="stat-today">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Next 7 days</div>
+        <div class="stat-num blue" id="stat-soon">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Completed</div>
+        <div class="stat-num green" id="stat-done">0</div>
+      </div>
+    </div>
+
+    <div id="task-container"></div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-title">Add task from email</div>
+    <div class="modal-sub">Capture a deliverable that just came in</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Job number</label>
+        <input class="form-input" id="f-jobnum" placeholder="e.g. DC26077" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Client</label>
+        <input class="form-input" id="f-client" placeholder="e.g. Delta Community CU" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deliverable / task name</label>
+      <input class="form-input" id="f-task" placeholder="e.g. R2 revised creative to DC" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">What they're asking for</label>
+      <textarea class="form-textarea" id="f-ask" placeholder="Paste or type the ask from the email..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Due date</label>
+        <input class="form-input" type="date" id="f-due" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deliverable type</label>
+        <select class="form-select" id="f-type">
+          <option value="EM">EM</option>
+          <option value="DM">DM</option>
+          <option value="Banners">Banners</option>
+          <option value="FWUP EM">FWUP EM</option>
+          <option value="FWUP DM">FWUP DM</option>
+          <option value="Posters">Posters</option>
+          <option value="Branch Video">Branch Video</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('add-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addTask()">Add task →</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="upload-modal">
+  <div class="modal">
+    <div class="modal-title">Upload status report CSV</div>
+    <div class="modal-sub">Export your Word table to Excel, save as CSV, then upload here</div>
+    <div class="notice">
+      CSV columns needed: <strong>campaign, task, type, due, client</strong><br>
+      Optional: <strong>dueEnd</strong> (for date ranges)
+    </div>
+    <div class="upload-area" onclick="document.getElementById('csv-input').click()">
+      <div class="upload-icon">⬆</div>
+      <div>Click to select CSV file</div>
+      <div style="font-size:10px;margin-top:4px;color:var(--text3)">or drag and drop</div>
+    </div>
+    <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCSV(event)" />
+    <div id="upload-status" style="margin-top:12px;font-size:11px;color:var(--text3)"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('upload-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'gain_tasks_v2';
+const DONE_KEY = 'gain_done_v2';
+
+// Seed data from Delta Community CU status report
+const SEED_TASKS = [
+  {id:'s1',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'HTML to Cassie',type:'EM/FWUP',due:'2026-05-26',source:'csv'},
+  {id:'s2',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Creative assets to DC',type:'EM/FWUP',due:'2026-05-28',source:'csv'},
+  {id:'s3',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'Email blast',type:'EM',due:'2026-06-04',source:'csv'},
+  {id:'s4',c:'Delta Community CU',campaign:'DC26077 // Summer RAF',task:'FWUP email blast',type:'FWUP EM',due:'2026-07-07',source:'csv'},
+  {id:'s5',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Upload file for DC',type:'Branch Video',due:'2026-05-29',source:'csv'},
+  {id:'s6',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'R3 creative to DC',type:'FWUP EM',due:'2026-05-28',source:'csv'},
+  {id:'s7',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'HTML Coding',type:'FWUP EM',due:'2026-06-03',dueEnd:'2026-06-09',source:'csv'},
+  {id:'s8',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'HTML to Cassie',type:'FWUP EM',due:'2026-06-09',source:'csv'},
+  {id:'s9',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative assets to DC',type:'FWUP EM',due:'2026-06-10',source:'csv'},
+  {id:'s10',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Email blast',type:'FWUP EM',due:'2026-06-23',source:'csv'},
+  {id:'s11',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'R3 revised creative to DC',type:'FWUP DM',due:'2026-06-01',source:'csv'},
+  {id:'s12',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Art releases to printer',type:'FWUP DM',due:'2026-06-08',source:'csv'},
+  {id:'s13',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Creative assets to DC',type:'FWUP DM',due:'2026-06-09',source:'csv'},
+  {id:'s14',c:'Delta Community CU',campaign:'DC26063 // Visa Multi Offer',task:'Email blast',type:'EM',due:'2026-06-02',source:'csv'},
+  {id:'s15',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'HTML Coding',type:'EM',due:'2026-05-29',dueEnd:'2026-06-04',source:'csv'},
+  {id:'s16',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'HTML to Cassie',type:'EM',due:'2026-06-04',source:'csv'},
+  {id:'s17',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'Creative assets to DC',type:'EM',due:'2026-06-05',source:'csv'},
+  {id:'s18',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q2',task:'Email blast',type:'EM',due:'2026-06-17',source:'csv'},
+  {id:'s19',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML Coding',type:'EM',due:'2026-05-27',dueEnd:'2026-06-02',source:'csv'},
+  {id:'s20',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML to Cassie',type:'EM',due:'2026-06-02',source:'csv'},
+  {id:'s21',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative assets to DC',type:'EM',due:'2026-06-03',source:'csv'},
+  {id:'s22',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Email blast',type:'EM',due:'2026-06-09',source:'csv'},
+  {id:'s23',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R1 creative to DC',type:'FWUP EM',due:'2026-06-04',source:'csv'},
+  {id:'s24',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML Coding',type:'FWUP EM',due:'2026-06-01',dueEnd:'2026-06-05',source:'csv'},
+  {id:'s25',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'HTML to Cassie',type:'FWUP EM',due:'2026-06-05',source:'csv'},
+  {id:'s26',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Creative assets to DC',type:'FWUP EM',due:'2026-06-08',source:'csv'},
+  {id:'s27',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R2 creative to DC',type:'FWUP EM',due:'2026-06-12',source:'csv'},
+  {id:'s28',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'R3 creative to DC',type:'FWUP EM',due:'2026-06-19',source:'csv'},
+  {id:'s29',c:'Delta Community CU',campaign:'DC26207 // Summer Auto Recapture',task:'Email blast',type:'FWUP EM',due:'2026-07-14',source:'csv'},
+  {id:'s30',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative presentation',type:'DM',due:'2026-06-04',source:'csv'},
+  {id:'s31',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'R2 revised creative to DC',type:'DM',due:'2026-06-12',source:'csv'},
+  {id:'s32',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'R3 revised creative to DC',type:'DM',due:'2026-06-23',source:'csv'},
+  {id:'s33',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Art releases to printer',type:'DM',due:'2026-07-01',source:'csv'},
+  {id:'s34',c:'Delta Community CU',campaign:'DC26080 // Interest Checking',task:'Creative assets to DC',type:'DM',due:'2026-07-02',source:'csv'},
+  {id:'s35',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R1 creative to DC',type:'EM',due:'2026-06-01',source:'csv'},
+  {id:'s36',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R2 revised creative to DC',type:'EM',due:'2026-06-09',source:'csv'},
+  {id:'s37',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'R3 revised creative to DC',type:'EM',due:'2026-06-17',source:'csv'},
+  {id:'s38',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'HTML Coding',type:'EM',due:'2026-06-30',dueEnd:'2026-07-08',source:'csv'},
+  {id:'s39',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'HTML to Cassie',type:'EM',due:'2026-07-08',source:'csv'},
+  {id:'s40',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Creative assets to DC',type:'EM',due:'2026-07-09',source:'csv'},
+  {id:'s41',c:'Delta Community CU',campaign:'DC26213 // MIA Email Refresh',task:'Email blast',type:'EM',due:'2026-07-16',source:'csv'},
+  {id:'s42',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R1 creative to DC',type:'EM',due:'2026-06-22',source:'csv'},
+  {id:'s43',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R2 revised creative to DC',type:'EM',due:'2026-06-29',source:'csv'},
+  {id:'s44',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'R3 revised creative to DC',type:'EM',due:'2026-07-08',source:'csv'},
+  {id:'s45',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'HTML Coding',type:'EM',due:'2026-07-14',dueEnd:'2026-07-20',source:'csv'},
+  {id:'s46',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-20',source:'csv'},
+  {id:'s47',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-21',source:'csv'},
+  {id:'s48',c:'Delta Community CU',campaign:'DC26030 // Info Security Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'csv'},
+  {id:'s49',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative start-up',type:'EM',due:'2026-06-03',source:'csv'},
+  {id:'s50',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R1 creative presentation',type:'EM',due:'2026-06-16',source:'csv'},
+  {id:'s51',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R2 revised creative to DC',type:'EM',due:'2026-06-23',source:'csv'},
+  {id:'s52',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R3 revised creative to DC',type:'EM',due:'2026-07-01',source:'csv'},
+  {id:'s53',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'HTML Coding',type:'EM',due:'2026-07-13',dueEnd:'2026-07-20',source:'csv'},
+  {id:'s54',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'HTML to Cassie',type:'EM',due:'2026-07-21',source:'csv'},
+  {id:'s55',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative assets to DC',type:'EM',due:'2026-07-22',source:'csv'},
+  {id:'s56',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Email blast',type:'EM',due:'2026-07-30',source:'csv'},
+  {id:'s57',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R1 creative to DC (submission form)',type:'Form',due:'2026-06-25',source:'csv'},
+  {id:'s58',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R2 revised creative (submission form)',type:'Form',due:'2026-07-02',source:'csv'},
+  {id:'s59',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'R3 revised creative (submission form)',type:'Form',due:'2026-07-10',source:'csv'},
+  {id:'s60',c:'Delta Community CU',campaign:'DC26035 // Youth Engagement Q3',task:'Creative assets to DC (submission form)',type:'Form',due:'2026-07-21',source:'csv'},
+  {id:'s61',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 creative to DC',type:'DM',due:'2026-06-09',source:'csv'},
+  {id:'s62',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'DM',due:'2026-06-16',source:'csv'},
+  {id:'s63',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 revised creative to DC',type:'DM',due:'2026-06-24',source:'csv'},
+  {id:'s64',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Art releases to printer',type:'DM',due:'2026-07-02',source:'csv'},
+  {id:'s65',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'DM',due:'2026-07-07',source:'csv'},
+  {id:'s66',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 creative to DC',type:'Posters',due:'2026-06-18',source:'csv'},
+  {id:'s67',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'Posters',due:'2026-06-25',source:'csv'},
+  {id:'s68',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 revised creative to DC',type:'Posters',due:'2026-07-02',source:'csv'},
+  {id:'s69',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'Posters',due:'2026-07-13',source:'csv'},
+  {id:'s70',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 creative to DC',type:'EM',due:'2026-06-29',source:'csv'},
+  {id:'s71',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'EM',due:'2026-07-08',source:'csv'},
+  {id:'s72',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 revised creative to DC',type:'EM',due:'2026-07-15',source:'csv'},
+  {id:'s73',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML Coding',type:'EM',due:'2026-07-22',dueEnd:'2026-07-28',source:'csv'},
+  {id:'s74',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML to Cassie',type:'EM',due:'2026-07-28',source:'csv'},
+  {id:'s75',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'EM',due:'2026-07-29',source:'csv'},
+  {id:'s76',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Email blast',type:'EM',due:'2026-08-06',source:'csv'},
+  {id:'s77',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 creative to DC',type:'Banners',due:'2026-07-08',source:'csv'},
+  {id:'s78',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'Banners',due:'2026-07-15',source:'csv'},
+  {id:'s79',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 revised creative to DC',type:'Banners',due:'2026-07-23',source:'csv'},
+  {id:'s80',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'Banners',due:'2026-07-30',source:'csv'},
+  {id:'s81',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 storyboards to DC',type:'Branch Video',due:'2026-07-01',source:'csv'},
+  {id:'s82',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'Branch Video',due:'2026-07-10',source:'csv'},
+  {id:'s83',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative to Ken for production',type:'Branch Video',due:'2026-07-20',dueEnd:'2026-07-24',source:'csv'},
+  {id:'s84',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Upload file for DC',type:'Branch Video',due:'2026-07-29',source:'csv'},
+  {id:'s85',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R1 creative to DC',type:'FWUP EM',due:'2026-07-13',source:'csv'},
+  {id:'s86',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R2 revised creative to DC',type:'FWUP EM',due:'2026-07-20',source:'csv'},
+  {id:'s87',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'R3 creative to DC',type:'FWUP EM',due:'2026-07-27',source:'csv'},
+  {id:'s88',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML Coding',type:'FWUP EM',due:'2026-08-03',dueEnd:'2026-08-07',source:'csv'},
+  {id:'s89',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'HTML to Cassie',type:'FWUP EM',due:'2026-08-07',source:'csv'},
+  {id:'s90',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Creative assets to DC',type:'FWUP EM',due:'2026-08-10',source:'csv'},
+  {id:'s91',c:'Delta Community CU',campaign:'DC26203 // Fall Personal Loan',task:'Email blast',type:'FWUP EM',due:'2026-08-18',source:'csv'},
+  {id:'s92',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R1 creative presentation',type:'EM',due:'2026-07-15',source:'csv'},
+  {id:'s93',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R2 revised creative to DC',type:'EM',due:'2026-07-27',source:'csv'},
+  {id:'s94',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'R3 revised creative to DC',type:'EM',due:'2026-08-03',source:'csv'},
+  {id:'s95',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'HTML Coding',type:'EM',due:'2026-08-10',dueEnd:'2026-08-14',source:'csv'},
+  {id:'s96',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-14',source:'csv'},
+  {id:'s97',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-17',source:'csv'},
+  {id:'s98',c:'Delta Community CU',campaign:'DC26032 // DCRIS Q3',task:'Email blast',type:'EM',due:'2026-08-25',source:'csv'},
+  {id:'s99',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R1 creative presentation',type:'EM',due:'2026-07-20',source:'csv'},
+  {id:'s100',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R2 revised creative to DC',type:'EM',due:'2026-07-28',source:'csv'},
+  {id:'s101',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 revised creative to DC',type:'EM',due:'2026-08-05',source:'csv'},
+  {id:'s102',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'HTML Coding',type:'EM',due:'2026-08-12',dueEnd:'2026-08-18',source:'csv'},
+  {id:'s103',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'HTML to Cassie',type:'EM',due:'2026-08-18',source:'csv'},
+  {id:'s104',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative assets to DC',type:'EM',due:'2026-08-19',source:'csv'},
+  {id:'s105',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Email blast',type:'EM',due:'2026-08-27',source:'csv'},
+  {id:'s106',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R1 creative to DC',type:'Banners',due:'2026-08-10',source:'csv'},
+  {id:'s107',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R2 revised creative to DC',type:'Banners',due:'2026-08-17',source:'csv'},
+  {id:'s108',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'R3 revised creative to DC',type:'Banners',due:'2026-08-24',source:'csv'},
+  {id:'s109',c:'Delta Community CU',campaign:'DC25225 // Zelle Q3',task:'Creative assets to DC',type:'Banners',due:'2026-08-28',source:'csv'},
+];
+
+// STATE
+let tasks = [];
+let done = new Set();
+let currentView = 'all';
+let currentClient = null;
+let dragSrcId = null;
+
+function loadState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const savedDone = localStorage.getItem(DONE_KEY);
+  tasks = saved ? JSON.parse(saved) : [...SEED_TASKS];
+  done = savedDone ? new Set(JSON.parse(savedDone)) : new Set();
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  localStorage.setItem(DONE_KEY, JSON.stringify([...done]));
+}
+
+// DATE UTILS
+function pd(s) {
+  if (!s) return null;
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function fd(s) {
+  if (!s) return '';
+  return pd(s).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+function today() {
+  const t = new Date();
+  t.setHours(0,0,0,0);
+  return t;
+}
+function getStatus(task) {
+  if (done.has(task.id)) return 'done';
+  const sd = task.dueEnd || task.due;
+  const d = pd(sd);
+  d.setHours(0,0,0,0);
+  const t = today();
+  if (d < t) return 'ov';
+  if (d.getTime() === t.getTime()) return 'today';
+  const week = new Date(t);
+  week.setDate(week.getDate() + 7);
+  if (d <= week) return 'soon';
+  return 'upcoming';
+}
+
+function getStatusLabel(s) {
+  return {ov:'Overdue',today:'Today',soon:'This week',upcoming:'Upcoming',done:'Done'}[s] || s;
+}
+
+// RENDER
+function render() {
+  const t = today();
+  document.getElementById('live-date').textContent = t.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+
+  let filtered = tasks.filter(task => {
+    const s = getStatus(task);
+    if (currentClient && task.c !== currentClient) return false;
+    if (currentView === 'all') return s !== 'done';
+    if (currentView === 'done') return s === 'done';
+    return s === currentView;
+  });
+
+  filtered.sort((a,b) => {
+    const da = pd(a.dueEnd||a.due), db = pd(b.dueEnd||b.due);
+    return da - db;
+  });
+
+  // counts
+  const counts = {ov:0,today:0,soon:0,upcoming:0,done:0};
+  tasks.forEach(task => { const s = getStatus(task); counts[s] = (counts[s]||0)+1; });
+
+  document.getElementById('stat-ov').textContent = counts.ov;
+  document.getElementById('stat-today').textContent = counts.today;
+  document.getElementById('stat-soon').textContent = counts.soon;
+  document.getElementById('stat-done').textContent = counts.done;
+
+  document.getElementById('count-all').textContent = tasks.filter(t=>getStatus(t)!=='done').length;
+  document.getElementById('count-ov').textContent = counts.ov;
+  document.getElementById('count-today').textContent = counts.today;
+  document.getElementById('count-soon').textContent = counts.soon;
+  document.getElementById('count-upcoming').textContent = counts.upcoming;
+  document.getElementById('count-done').textContent = counts.done;
+
+  // client list
+  const clients = [...new Set(tasks.map(t=>t.c))];
+  document.getElementById('client-list').innerHTML = clients.map(cl => `
+    <div class="nav-item${currentClient===cl?' active':''}" onclick="setClient('${cl}')">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${cl}</span>
+      <span class="nav-count">${tasks.filter(t=>t.c===cl&&getStatus(t)!=='done').length}</span>
+    </div>
+  `).join('') + (currentClient ? `<div class="nav-item" onclick="setClient(null)" style="color:var(--text3)">All clients</div>` : '');
+
+  // task container
+  let html = '';
+  if (!filtered.length) {
+    html = '<div class="empty">No tasks in this view.</div>';
+  } else if (currentView === 'all') {
+    const groups = [
+      {key:'ov', label:'Overdue'},
+      {key:'today', label:`Today — ${t.toLocaleDateString('en-US',{month:'long',day:'numeric'})}`},
+      {key:'soon', label:'Next 7 days'},
+      {key:'upcoming', label:'Upcoming'},
+    ];
+    groups.forEach(g => {
+      const gt = filtered.filter(task => getStatus(task) === g.key);
+      if (!gt.length) return;
+      html += `<div class="group-header"><span>${g.label}</span><span style="color:var(--text3)">${gt.length} task${gt.length!==1?'s':''}</span></div>`;
+      gt.forEach(task => html += taskRow(task));
+    });
+  } else {
+    filtered.forEach(task => html += taskRow(task));
+  }
+
+  document.getElementById('task-container').innerHTML = html;
+  attachDragHandlers();
+}
+
+function taskRow(task) {
+  const s = getStatus(task);
+  const isDone = s === 'done';
+  const dateStr = task.dueEnd
+    ? `${fd(task.due)}<span class="range">thru ${fd(task.dueEnd)}</span>`
+    : fd(task.due);
+  return `
+    <div class="task-row status-${s}${isDone?' done':''}"
+      draggable="true"
+      data-id="${task.id}"
+      ondragstart="dragStart(event)"
+      ondragover="dragOver(event)"
+      ondrop="dragDrop(event)"
+      ondragend="dragEnd(event)">
+      <input type="checkbox" class="task-check" ${isDone?'checked':''} onchange="toggleDone('${task.id}')" />
+      <div class="task-date">${dateStr}</div>
+      <div>
+        <div class="task-name">${task.task}</div>
+        <div class="task-campaign">${task.campaign}</div>
+      </div>
+      <div class="type-badge">${task.type}</div>
+      <div class="status-badge ${s}">${getStatusLabel(s)}</div>
+      <div class="source-badge">${task.source==='email'?'📧 email':'📄 report'}</div>
+    </div>`;
+}
+
+// ACTIONS
+function toggleDone(id) {
+  if (done.has(id)) done.delete(id);
+  else done.add(id);
+  saveState();
+  render();
+}
+
+function setView(v, el) {
+  currentView = v;
+  currentClient = null;
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  render();
+}
+
+function setClient(c) {
+  currentClient = c;
+  currentView = 'all';
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  render();
+}
+
+function addTask() {
+  const jobnum = document.getElementById('f-jobnum').value.trim();
+  const client = document.getElementById('f-client').value.trim();
+  const task = document.getElementById('f-task').value.trim();
+  const due = document.getElementById('f-due').value;
+  const type = document.getElementById('f-type').value;
+  if (!task || !due) { alert('Task name and due date are required.'); return; }
+  const newTask = {
+    id: 'e' + Date.now(),
+    c: client || 'Other',
+    campaign: jobnum ? `${jobnum} // ${client||''}` : (client || 'Other'),
+    task, type, due,
+    source: 'email'
+  };
+  tasks.unshift(newTask);
+  saveState();
+  closeModal('add-modal');
+  ['f-jobnum','f-client','f-task','f-ask','f-due'].forEach(id => document.getElementById(id).value = '');
+  render();
+}
+
+function handleCSV(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const lines = ev.target.result.split('\n').filter(l => l.trim());
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g,''));
+    let imported = 0;
+    for (let i = 1; i < lines.length; i++) {
+      const vals = lines[i].split(',').map(v => v.trim().replace(/"/g,''));
+      const row = {};
+      headers.forEach((h,idx) => row[h] = vals[idx]||'');
+      if (!row.task || !row.due) continue;
+      const id = 'csv_' + (row.campaign||'').replace(/\s/g,'') + '_' + row.task.replace(/\s/g,'').slice(0,10);
+      if (tasks.find(t => t.id === id)) continue;
+      tasks.push({
+        id,
+        c: row.client || 'Imported',
+        campaign: row.campaign || 'Imported',
+        task: row.task,
+        type: row.type || 'Other',
+        due: row.due,
+        dueEnd: row.dueend || null,
+        source: 'csv'
+      });
+      imported++;
+    }
+    saveState();
+    render();
+    document.getElementById('upload-status').textContent = `✓ Imported ${imported} new tasks.`;
+  };
+  reader.readAsText(file);
+}
+
+function exportCSV() {
+  const headers = 'client,campaign,task,type,due,dueEnd,source,done';
+  const rows = tasks.map(t =>
+    [t.c, t.campaign, t.task, t.type, t.due, t.dueEnd||'', t.source, done.has(t.id)?'yes':'no']
+    .map(v => `"${v}"`).join(',')
+  );
+  const csv = [headers, ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gain_tasks.csv';
+  a.click();
+}
+
+function clearCompleted() {
+  if (!confirm('Clear all completed tasks?')) return;
+  tasks = tasks.filter(t => !done.has(t.id));
+  done.clear();
+  saveState();
+  render();
+}
+
+// DRAG AND DROP
+function attachDragHandlers() {}
+function dragStart(e) {
+  dragSrcId = e.currentTarget.dataset.id;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function dragDrop(e) {
+  e.preventDefault();
+  const targetId = e.currentTarget.dataset.id;
+  if (dragSrcId === targetId) return;
+  const srcIdx = tasks.findIndex(t => t.id === dragSrcId);
+  const tgtIdx = tasks.findIndex(t => t.id === targetId);
+  const [moved] = tasks.splice(srcIdx, 1);
+  tasks.splice(tgtIdx, 0, moved);
+  saveState();
+  render();
+}
+function dragEnd(e) {
+  document.querySelectorAll('.task-row').forEach(r => {
+    r.classList.remove('dragging','drag-over');
+  });
+}
+
+// MODALS
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// INIT
+loadState();
+render();
+// Auto-refresh every minute
+setInterval(render, 60000);
+</script>
+</body>
+</html>
